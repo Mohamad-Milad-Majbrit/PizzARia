@@ -19,21 +19,21 @@ Wenn Hintergrund gelb ist:
 
 
 
-### Teil 2: Individuelle Einrichtung (Muss von jedem Entwickler einmal durchgeführt werden)
+## Teil 2: Individuelle Einrichtung zum Szenen Mergen (Muss von jedem Entwickler einmal durchgeführt werden)
 
 Jeder Entwickler muss diese Schritte auf seinem eigenen Rechner durchführen, um Git richtig zu konfigurieren.
 
-#### 1. Alternatives Merge-Tool installieren
+### 1. Alternatives Merge-Tool installieren
 Das Programm `p4merge` installieren
 
-#### 2. UnityYAMLMerge-Pfad finden
+### 2. UnityYAMLMerge-Pfad finden
 
 Suchen das `UnityYAMLMerge`-Tool im Installationsordner deiner Unity-Version. Notieren dir den vollständigen Pfad.
 
 * **Beispiel Windows:** `C:\Program Files\Unity\Hub\Editor\6000.2.12f1\Editor\Data\Tools\UnityYAMLMerge.exe`
 * **Beispiel macOS:** `/Applications/Unity/Editor/Data/Tools/UnityYAMLMerge`
 
-#### 3. Git-Merge-Tool konfigurieren
+### 3. Git-Merge-Tool konfigurieren
 
 Öffnen das Terminal (Git Bash!) und führen die folgenden drei Befehle aus. **Ersetzen Sie dabei `<path to UnityYAMLMerge>` durch den in Schritt 4 gefundenen Pfad.**
 
@@ -49,3 +49,22 @@ git config --global mergetool.unityyamlmerge.trustExitCode false
 # 3. Definiert ein Fallback-Tool, falls UnityYAMLMerge den Konflikt nicht lösen kann (optional, aber empfohlen).
 # Beispiel für P4Merge (ein gängiges, kostenloses Merge-Tool):
 git config --global merge.tool p4merge
+
+```
+
+### 4. Szenen Mergen
+
+Auf mergen in Github Desktop klicken oder per Terminalbefehl.
+
+Den Konflikt in der IDE z.B. Visual Studio Code öffnen.
+
+Im Terminal in den Ordner mit dem Konflikt navigieren z.B. cd `C:\Pfad\MobileAR\Assets\Scenes\BlankScene`
+
+Mergeprozess im Terminal starten: `git mergetool`
+
+Das p4merge Programm öffnet sich und darin können die Konflikte gelöst werden
+
+```diff
+- Ich weiß nicht wie fehlerfrei das Mergen mit p4merge ist. Am sichersten ist es, wenn jeder in einer eignen Szene arbeitet und nur einer die Elemente in die Hauptszene verschiebt. Am besten wir probieren beide Methoden, da man nicht immer dran vorbei kommt in der Hauptszene etwas zu ändern.
+```
+
