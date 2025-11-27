@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d72965e82ba00fe4f813c986c88e7ae0, type: 3}
+  m_Name: Salami
+  m_EditorClassIdentifier: Assembly-CSharp::IngredientData
+  ingredientName: Salami
+  priceSmall: 1.5
+  priceMedium: 1.6
+  priceLarge: 2.2
+  icon: {fileID: 0}
+  arModelPrefab: {fileID: 919132149155446097, guid: fb9608dd2c33a944c85dd722b9dfce95, type: 3}
