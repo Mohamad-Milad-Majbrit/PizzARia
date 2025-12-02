@@ -1697,6 +1697,7 @@ GameObject:
   - component: {fileID: 657757722}
   - component: {fileID: 657757723}
   - component: {fileID: 657757724}
+  - component: {fileID: 657757725}
   m_Layer: 5
   m_Name: HorizontalTotalPrice
   m_TagString: Untagged
@@ -1771,6 +1772,19 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
   m_LayoutPriority: 1
+--- !u!114 &657757725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 657757721}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec6922e6c5edbe4a84e927dca7e9ca7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  priceText: {fileID: 1392306502}
 --- !u!1 &668197045
 GameObject:
   m_ObjectHideFlags: 0
@@ -2636,6 +2650,7 @@ GameObject:
   - component: {fileID: 1272278890}
   - component: {fileID: 1272278889}
   - component: {fileID: 1272278888}
+  - component: {fileID: 1272278892}
   m_Layer: 5
   m_Name: SizeChoice
   m_TagString: Untagged
@@ -2716,6 +2731,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -180}
   m_SizeDelta: {x: 260, y: 94}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &1272278892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272278887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4ff5ae57a2cb9142ac31fd79573d1d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  toggleS: {fileID: 1914493984}
+  toggleM: {fileID: 136257251}
+  toggleL: {fileID: 1233794988}
 --- !u!1 &1292883564
 GameObject:
   m_ObjectHideFlags: 0
@@ -2727,6 +2757,7 @@ GameObject:
   - component: {fileID: 1292883565}
   - component: {fileID: 1292883566}
   - component: {fileID: 1292883567}
+  - component: {fileID: 1292883568}
   m_Layer: 5
   m_Name: HorizontalPizza
   m_TagString: Untagged
@@ -2801,6 +2832,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
   m_LayoutPriority: 1
+--- !u!114 &1292883568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292883564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d000e4360c1fb0c49bcfa1d827f29dd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  priceText: {fileID: 544323862}
+  pizzaNameText: {fileID: 1454015512}
 --- !u!1 &1308208894
 GameObject:
   m_ObjectHideFlags: 0

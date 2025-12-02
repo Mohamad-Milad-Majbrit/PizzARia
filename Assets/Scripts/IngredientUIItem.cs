@@ -7,9 +7,24 @@ public class IngredientUIItem : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI priceText;
     public Toggle selectionToggle;
+    public Image background;
 
     private IngredientData myData;
 
+
+    void Start()
+    {
+
+        OrderManager.Instance.OnOrderChanged += UpdatePriceDisplay;
+    }
+
+    void OnDestroy()
+    {
+        if (OrderManager.Instance != null)
+        {
+            OrderManager.Instance.OnOrderChanged -= UpdatePriceDisplay;
+        }
+    }
     public void Setup(IngredientData data)
     {
         myData = data;
@@ -34,5 +49,15 @@ public class IngredientUIItem : MonoBehaviour
     void OnToggleChanged(bool isOn)
     {
         OrderManager.Instance.ToggleIngredient(myData);
+
+        if (isOn)
+        {
+            background.color = Color.green;
+        }
+        else
+        {
+            background.color = Color.white;
+        }
     }
+
 }

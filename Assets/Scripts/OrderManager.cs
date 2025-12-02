@@ -80,6 +80,28 @@ public class OrderManager : MonoBehaviour
         return basePrice + extrasPrice;
     }
 
+    public float GetPizzaPrice()
+    {
+        if (currentPizza == null) return 0;
+
+        float basePrice = 0;
+        switch (currentSizeIndex)
+        {
+            case 0: basePrice = currentPizza.priceSmall; break;
+            case 1: basePrice = currentPizza.priceMedium; break;
+            case 2: basePrice = currentPizza.priceLarge; break;
+        }
+        return basePrice ;
+    }
+
+    public string GetPizzaName()
+    {
+        if (currentPizza == null) return "keine Pizza";
+        return currentPizza.name;
+
+    }
+
+
     private void UpdateOrder()
     {
         Debug.Log("Neuer Preis: " + GetTotalPrice() + " €");
