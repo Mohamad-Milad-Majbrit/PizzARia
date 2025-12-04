@@ -17,4 +17,4 @@ MonoBehaviour:
   priceMedium: 2.2
   priceLarge: 2.6
   icon: {fileID: 0}
-  arModelPrefab: {fileID: 919132149155446097, guid: 1ce0455aebee77748a91e35a0fec3d30, type: 3}
+  arModelPrefab: {fileID: 304749095262974782, guid: 5427d698edfe728488645977c6199373, type: 3}

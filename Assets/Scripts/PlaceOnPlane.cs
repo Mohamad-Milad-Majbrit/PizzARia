@@ -2,45 +2,108 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class PlaceOnPlane : MonoBehaviour
 {
-    public GameObject objectToPlace;            // Prefab to spawn
     public ARPlaneManager planeManager;         // ARPlaneManager reference
     public ARRaycastManager raycastManager;     // ARRaycastManager reference
+    public GameObject hintScanUI;      
+    public GameObject hintTapUI;       
 
-    private bool hasPlacedObject = false;       // Ensures object is placed only once
+    private bool planesDetected = false;
+    private bool placed = false;
+
     static List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     void OnEnable()
     {
         planeManager.trackablesChanged.AddListener(OnPlanesChanged);
-
     }
-
     void OnDisable()
     {
         planeManager.trackablesChanged.RemoveListener(OnPlanesChanged);
     }
 
+    void Start()
+    {
+        planeManager.enabled = false;
+        raycastManager.enabled = false;
+
+        hintScanUI?.SetActive(false);
+        hintTapUI?.SetActive(false);
+    }
+
+
+    public void StartARPlacement()
+    {
+        planeManager.enabled = true;
+        raycastManager.enabled = true;
+
+        hintScanUI?.SetActive(true);
+    }
+
     private void OnPlanesChanged(ARTrackablesChangedEventArgs<ARPlane> args)
     {
-        // Only place once and only when new planes are detected
-        if (hasPlacedObject || args.added.Count == 0)
+        if (planesDetected || args.added.Count == 0)
             return;
 
-        // Use the first newly detected plane
-        ARPlane plane = args.added[0];
+        planesDetected = true;
 
-        // Raycast from the center of the screen to the plane
-        Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        hintScanUI?.SetActive(false);
+        hintTapUI?.SetActive(true);
+    }
 
-        if (raycastManager.Raycast(screenCenter, hits, TrackableType.PlaneWithinPolygon))
+    void Update()
+    {
+        Debug.Log("Update");
+        if (!planesDetected || placed)
+            return;
+
+        if (Input.touchCount == 0)
+            return;
+
+        Touch touch = Input.GetTouch(0);
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(touch.fingerId))
         {
-            Pose pose = hits[0].pose;
+            return; 
+        }
 
-            Instantiate(objectToPlace, pose.position, pose.rotation);
-            hasPlacedObject = true;
+        Debug.Log("keine Returns");
+        if (touch.phase == TouchPhase.Began)
+        {
+            Debug.Log("TouchPhase");
+            if (raycastManager.Raycast(touch.position, hits, TrackableType.PlaneWithinPolygon))
+            {
+                Debug.Log("Raycst");
+                Pose pose = hits[0].pose;
+
+                Instantiate(OrderManager.Instance.currentPizza.arBaseModelPrefab, pose.position, pose.rotation);
+
+                Vector3 ingredientPosition = pose.position;
+                ingredientPosition.y += 0.1f;
+                
+
+                foreach (IngredientData ingredient in OrderManager.Instance.allIngredients)
+                {
+                    //ingredientPosition.x = Random.Range(-10, 10) / 100f;
+                    //ingredientPosition.z = Random.Range(-10, 10) / 100f;
+
+                    Instantiate(ingredient.arModelPrefab, ingredientPosition, pose.rotation);
+
+                }
+
+
+                placed = true;
+                hintTapUI?.SetActive(false);
+
+                foreach (var plane in planeManager.trackables)
+                {
+                    plane.gameObject.SetActive(false);
+                }
+                planeManager.enabled = false; 
+            }
         }
     }
 }
