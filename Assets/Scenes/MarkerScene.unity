@@ -2271,13 +2271,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   allPizzas:
   - {fileID: 11400000, guid: a55b11f0193e5434ebd11ef7e125e3e4, type: 2}
+  - {fileID: 11400000, guid: 4ecbd3ddf0b0e1b439882b2a00212495, type: 2}
+  - {fileID: 11400000, guid: 8978ca741adc23c40a34c6ecb8511a59, type: 2}
   allIngredients:
   - {fileID: 11400000, guid: a0c082ba550159d469250a1f39a81d0e, type: 2}
   - {fileID: 11400000, guid: 07f0d190f99fa2f4b8905001576d76ad, type: 2}
   - {fileID: 11400000, guid: a38a64218644da141944427a47b0f38e, type: 2}
+  - {fileID: 11400000, guid: 493199d67aaae8b45823fe81c829ace2, type: 2}
   currentPizza: {fileID: 0}
   currentSizeIndex: 0
   selectedExtraIngredients: []
+  sizeS: 0.14
+  sizeM: 0.17
+  sizeL: 0.19
+  amountS: 3
+  amountM: 4
+  amountL: 5
 --- !u!4 &964975271
 Transform:
   m_ObjectHideFlags: 0

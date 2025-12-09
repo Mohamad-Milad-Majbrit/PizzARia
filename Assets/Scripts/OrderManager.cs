@@ -15,6 +15,14 @@ public class OrderManager : MonoBehaviour
 
     public System.Action OnOrderChanged;
 
+    public float sizeS = 0.14f;
+    public float sizeM = 0.17f;
+    public float sizeL = 0.19f;
+
+    public int amountS = 3;
+    public int amountM = 4;
+    public int amountL = 5;
+
     private void Awake()
     {
         if (Instance == null) Instance = this;
@@ -39,6 +47,38 @@ public class OrderManager : MonoBehaviour
     {
         currentSizeIndex = sizeIndex;
         UpdateOrder();
+    }
+
+    public float GetFloatSize()
+    {
+        if (currentSizeIndex == 0)
+        {
+            return sizeS;
+        }
+        else if (currentSizeIndex == 1)
+        {
+            return sizeM;
+        }
+        else
+        {
+            return sizeL;
+        }
+    }
+
+    public int GetFloatIngredientAmount()
+    {
+        if (currentSizeIndex == 0)
+        {
+            return amountS;
+        }
+        else if (currentSizeIndex == 1)
+        {
+            return amountM;
+        }
+        else
+        {
+            return amountL;
+        }
     }
 
     public void ToggleIngredient(IngredientData ingredient)
