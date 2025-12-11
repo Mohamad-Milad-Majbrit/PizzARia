@@ -384,6 +384,9 @@ MonoBehaviour:
   raycastManager: {fileID: 130824023}
   hintScanUI: {fileID: 0}
   hintTapUI: {fileID: 0}
+  pizzaLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &130998802
 GameObject:
   m_ObjectHideFlags: 0
@@ -2364,6 +2367,9 @@ MonoBehaviour:
   raycastManager: {fileID: 130824023}
   hintScanUI: {fileID: 1465187951}
   hintTapUI: {fileID: 1486083167}
+  pizzaLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!4 &1046339268
 Transform:
   m_ObjectHideFlags: 0
@@ -2817,7 +2823,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1

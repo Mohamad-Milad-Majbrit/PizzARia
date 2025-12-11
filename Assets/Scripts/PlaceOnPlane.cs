@@ -3,13 +3,16 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 public class PlaceOnPlane : MonoBehaviour
 {
     public ARPlaneManager planeManager;         // ARPlaneManager reference
     public ARRaycastManager raycastManager;     // ARRaycastManager reference
     public GameObject hintScanUI;      
-    public GameObject hintTapUI;       
+    public GameObject hintTapUI;
+
+    public LayerMask pizzaLayerMask;
 
     private bool planesDetected = false;
     private bool placed = false;
@@ -86,7 +89,7 @@ public class PlaceOnPlane : MonoBehaviour
 
                 int ingredientAmount = OrderManager.Instance.GetFloatIngredientAmount();
                 int totalIngredients = OrderManager.Instance.allIngredients.Count;
-                float pizzaRadius = OrderManager.Instance.GetFloatSize() -0.02f;
+                //float pizzaRadius = OrderManager.Instance.GetFloatSize() -0.06f;
 
                 // All ingredients with their frequency of occurrence
                 List<IngredientData> ingredients = new List<IngredientData> { };
@@ -112,7 +115,8 @@ public class PlaceOnPlane : MonoBehaviour
 
 
                 // Spread the ingredients on the pizza
-                for (int i = 0; i < totalIngredientsAmount; i++)
+                StartCoroutine(SpawnIngredients(ingredients, newPizza, totalIngredientsAmount, plateSize));
+                /*for (int i = 0; i < totalIngredientsAmount; i++)
                 {
                     IngredientData ingredient = ingredients[i];
 
@@ -122,13 +126,22 @@ public class PlaceOnPlane : MonoBehaviour
 
                     float x = r * Mathf.Cos(theta);
                     float z = r * Mathf.Sin(theta);
-                    float y = Random.Range(0.35f, 0.5f);
+                    float y = Random.Range(0.1f, 0.13f);
 
                     Vector3 localPos = new Vector3(x, y, z); 
                     Vector3 finalPos = pose.position + (pose.rotation * localPos);
 
-                    Instantiate(ingredient.arModelPrefab, finalPos, pose.rotation);
-                }
+                    Quaternion randomSpin = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+                    Quaternion finalRotation = pose.rotation * randomSpin;
+
+                    GameObject newIngredient = Instantiate(ingredient.arModelPrefab, finalPos, finalRotation);
+
+                    Rigidbody rb = newIngredient.GetComponent<Rigidbody>();
+                    if (rb != null)
+                    {
+                        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+                    }
+                }*/
 
 
                 placed = true;
@@ -140,6 +153,53 @@ public class PlaceOnPlane : MonoBehaviour
                 }
                 planeManager.enabled = false; 
             }
+        }
+    }
+
+
+
+
+    IEnumerator SpawnIngredients(List<IngredientData> ingredients, GameObject pizzaObject, int totalCount, float parentScale)
+    {
+        Transform pizzaTransform = pizzaObject.transform;
+
+
+        float normalizedRadius = 0.35f;
+
+
+        for (int i = 0; i < totalCount; i++)
+        {
+            IngredientData ingredient = ingredients[i];
+
+            float r = normalizedRadius * Mathf.Sqrt((float)i / totalCount);
+            float theta = i * Mathf.PI * (3f - Mathf.Sqrt(5f));
+
+            float x = r * Mathf.Cos(theta);
+            float z = r * Mathf.Sin(theta);
+
+            Vector3 rayStartLocal = new Vector3(x, 0.2f, z);
+            Vector3 rayStartWorld = pizzaTransform.TransformPoint(rayStartLocal);
+
+            float spawnDelay = 0.05f;
+
+            if (Physics.Raycast(rayStartWorld, -pizzaTransform.up, out RaycastHit hitInfo, 0.5f, pizzaLayerMask))
+            {
+     
+                GameObject newIngredient = Instantiate(ingredient.arModelPrefab, hitInfo.point, Quaternion.identity);
+                Vector3 originalPrefabScale = ingredient.arModelPrefab.transform.localScale;
+                newIngredient.transform.SetParent(pizzaTransform, true);
+                newIngredient.transform.localScale = new Vector3(
+                    originalPrefabScale.x / parentScale,
+                    originalPrefabScale.y / parentScale,
+                    originalPrefabScale.z / parentScale
+                );
+
+                newIngredient.transform.up = hitInfo.normal;
+
+                newIngredient.transform.Rotate(0, Random.Range(0, 360), 0, Space.Self);
+            }
+
+            yield return new WaitForSeconds(spawnDelay);
         }
     }
 }

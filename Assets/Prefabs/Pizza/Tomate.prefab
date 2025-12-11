@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 5178387067812923005}
   - component: {fileID: 701832208055994939}
   - component: {fileID: 1186662772996253532}
-  - component: {fileID: -2513329968107189690}
   - component: {fileID: -3479931026817650515}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Tomate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +41,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7862802705962035521}
-  m_Mesh: {fileID: 3136737070024872881, guid: 96470b3cbf369d04f86fd4e33a1e41bc, type: 3}
+  m_Mesh: {fileID: 4300000, guid: f63543bdc138e0b4ebd35a75e708e00b, type: 2}
 --- !u!23 &1186662772996253532
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -68,8 +67,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -7692667613533046675, guid: 96470b3cbf369d04f86fd4e33a1e41bc, type: 3}
-  - {fileID: -4984854504960134459, guid: 96470b3cbf369d04f86fd4e33a1e41bc, type: 3}
+  - {fileID: 2100000, guid: 5d5891e6973997f40a1e8ce8b8827ac7, type: 2}
+  - {fileID: 2100000, guid: 01d755b85048eb7478aefd62b0dec86d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -92,33 +91,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &-2513329968107189690
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7862802705962035521}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 2
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &-3479931026817650515
 BoxCollider:
   m_ObjectHideFlags: 0

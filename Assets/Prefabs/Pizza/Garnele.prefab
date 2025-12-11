@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 3809979649357698283}
   - component: {fileID: 2918508882832200474}
   - component: {fileID: 8736504444592588481}
-  - component: {fileID: 3728926642384767912}
   - component: {fileID: 4829156736927280344}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Garnele
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +41,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7987962672726486115}
-  m_Mesh: {fileID: 604928537770472203, guid: 37e68a96c669d4d4c9ed4f6946d63664, type: 3}
+  m_Mesh: {fileID: 4300000, guid: b9c9829b061d65f4c85c122b6b840e5d, type: 2}
 --- !u!23 &8736504444592588481
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -68,8 +67,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 7771320111065082804, guid: 37e68a96c669d4d4c9ed4f6946d63664, type: 3}
-  - {fileID: -7403492811455319877, guid: 37e68a96c669d4d4c9ed4f6946d63664, type: 3}
+  - {fileID: 2100000, guid: 228e10c2259d4dc4d9ffa646842e43fd, type: 2}
+  - {fileID: 2100000, guid: fa5e9c35f25f38a42860edb3c3828c76, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -92,33 +91,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &3728926642384767912
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7987962672726486115}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 2
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!65 &4829156736927280344
 BoxCollider:
   m_ObjectHideFlags: 0
