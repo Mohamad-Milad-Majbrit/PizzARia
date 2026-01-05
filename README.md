@@ -49,3 +49,13 @@ git config --global mergetool.unityyamlmerge.trustExitCode false
 # 3. Definiert ein Fallback-Tool, falls UnityYAMLMerge den Konflikt nicht lösen kann (optional, aber empfohlen).
 # Beispiel für P4Merge (ein gängiges, kostenloses Merge-Tool):
 git config --global merge.tool p4merge
+
+
+# Icon-Quellen
+Shrimp: https://thenounproject.com/icon/shrimp-7471832/
+Tomate: https://thenounproject.com/icon/tomato-8175437/
+Salami: https://thenounproject.com/icon/salami-7496874/
+Balilikum: https://thenounproject.com/icon/basil-7488088/
+Olive: https://thenounproject.com/icon/olives-5861648/
+Champignon: https://thenounproject.com/icon/champignon-4260011/
+Artischocke: https://thenounproject.com/icon/artichoke-7488151/
