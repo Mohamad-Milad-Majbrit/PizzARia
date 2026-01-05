@@ -50,6 +50,8 @@ git config --global mergetool.unityyamlmerge.trustExitCode false
 # Beispiel für P4Merge (ein gängiges, kostenloses Merge-Tool):
 git config --global merge.tool p4merge
 
+
+
 ```
 
 ### 4. Szenen Mergen
@@ -67,4 +69,14 @@ Das p4merge Programm öffnet sich und darin können die Konflikte gelöst werden
 ```diff
 - Ich weiß nicht wie fehlerfrei das Mergen mit p4merge ist. Am sichersten ist es, wenn jeder in einer eignen Szene arbeitet und nur einer die Elemente in die Hauptszene verschiebt. Am besten wir probieren beide Methoden, da man nicht immer dran vorbei kommt in der Hauptszene etwas zu ändern.
 ```
+
+
+# Icon-Quellen
+Shrimp: https://thenounproject.com/icon/shrimp-7471832/
+Tomate: https://thenounproject.com/icon/tomato-8175437/
+Salami: https://thenounproject.com/icon/salami-7496874/
+Balilikum: https://thenounproject.com/icon/basil-7488088/
+Olive: https://thenounproject.com/icon/olives-5861648/
+Champignon: https://thenounproject.com/icon/champignon-4260011/
+Artischocke: https://thenounproject.com/icon/artichoke-7488151/
 

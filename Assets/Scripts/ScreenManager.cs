@@ -9,7 +9,9 @@ public class ScreenManager : MonoBehaviour
     public GameObject arCanvas;         
 
     [Header("Managers")]
-    public PlaceOnPlane arManager; 
+    public PlaceOnPlane arManager;
+    public UIManager uiManager;
+
 
     private void Awake()
     {
@@ -21,6 +23,7 @@ public class ScreenManager : MonoBehaviour
     {
         ingredientCanvas.SetActive(true);
         arCanvas.SetActive(false);
+        uiManager.GenerateIngredientList();
     }
 
     public void ShowARScreen()
@@ -28,5 +31,6 @@ public class ScreenManager : MonoBehaviour
         ingredientCanvas.SetActive(false);
         arCanvas.SetActive(true);
         arManager.StartARPlacement();
+        uiManager.GenerateIngredientIconList();
     }
 }

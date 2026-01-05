@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class OrderManager : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class OrderManager : MonoBehaviour
     public List<IngredientData> selectedExtraIngredients = new List<IngredientData>();
 
     public System.Action OnOrderChanged;
+    public event Action<IngredientData, bool> OnIngredientToggled;
 
     public float sizeS = 0.14f;
     public float sizeM = 0.17f;
@@ -86,14 +88,24 @@ public class OrderManager : MonoBehaviour
         if (selectedExtraIngredients.Contains(ingredient))
         {
             selectedExtraIngredients.Remove(ingredient);
+            OnIngredientToggled?.Invoke(ingredient, false);
         }
         else
         {
             selectedExtraIngredients.Add(ingredient);
+            OnIngredientToggled?.Invoke(ingredient, true);
         }
         UpdateOrder();
     }
 
+    public bool IsIgredientSelected(IngredientData ingredientData)
+    {
+        if (selectedExtraIngredients.Contains(ingredientData))
+        {
+            return true;
+        }
+        return false;
+    }
     public float GetTotalPrice()
     {
         if (currentPizza == null) return 0;
