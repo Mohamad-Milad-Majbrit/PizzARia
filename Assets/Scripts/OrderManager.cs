@@ -98,6 +98,12 @@ public class OrderManager : MonoBehaviour
         UpdateOrder();
     }
 
+    public void TogglePizzen(PizzaData pizzaData)
+    {
+        currentPizza = pizzaData;
+
+    }
+
     public bool IsIgredientSelected(IngredientData ingredientData)
     {
         if (selectedExtraIngredients.Contains(ingredientData))
