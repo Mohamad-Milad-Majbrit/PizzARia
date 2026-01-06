@@ -21,6 +21,10 @@ public class PlaceOnPlane : MonoBehaviour
 
     public UnityEvent OnPizzaPlaced;
 
+    private GameObject mainPizza;
+    private GameObject comparePizza;
+
+
     void OnEnable()
     {
         planeManager.trackablesChanged.AddListener(OnPlanesChanged);
@@ -82,13 +86,14 @@ public class PlaceOnPlane : MonoBehaviour
                 Pose pose = hits[0].pose;
                 float plateSize = OrderManager.Instance.GetFloatSize()*2;
 
-                GameObject newPizza = Instantiate(OrderManager.Instance.currentPizza.arBaseModelPrefab, pose.position, pose.rotation);
-                newPizza.transform.localScale = new Vector3(plateSize, plateSize, plateSize);
+                mainPizza = SpawnPizza(pose.position, pose.rotation);
+                /*mainPizza = Instantiate(OrderManager.Instance.currentPizza.arBaseModelPrefab, pose.position, pose.rotation);
+                mainPizza.transform.localScale = new Vector3(plateSize, plateSize, plateSize);
 
-                PizzaController toppingController = newPizza.GetComponent<PizzaController>();
+                PizzaController toppingController = mainPizza.GetComponent<PizzaController>();
                 if (toppingController == null)
                 {
-                    toppingController = newPizza.AddComponent<PizzaController>();
+                    toppingController = mainPizza.AddComponent<PizzaController>();
                 }
                 toppingController.Initialize(plateSize, pizzaLayerMask);
 
@@ -112,9 +117,53 @@ public class PlaceOnPlane : MonoBehaviour
                 {
                     plane.gameObject.SetActive(false);
                 }
-                planeManager.enabled = false; 
+                planeManager.enabled = false; */
             }
         }
+    }
+
+    private GameObject SpawnPizza(Vector3 position, Quaternion rotation)
+    {
+        float plateSize = OrderManager.Instance.GetFloatSize() * 2;
+
+        GameObject pizza = Instantiate(
+            OrderManager.Instance.currentPizza.arBaseModelPrefab,
+            position,
+            rotation
+        );
+
+        pizza.transform.localScale = Vector3.one * plateSize;
+
+        PizzaController controller = pizza.GetComponent<PizzaController>();
+        if (controller == null)
+            controller = pizza.AddComponent<PizzaController>();
+
+        controller.Initialize(plateSize, pizzaLayerMask);
+
+        int ingredientAmount = OrderManager.Instance.GetFloatIngredientAmount();
+        foreach (var ingredient in OrderManager.Instance.allIngredients)
+        {
+            if (OrderManager.Instance.IsIgredientSelected(ingredient))
+            {
+                controller.SpawnInitialBatch(ingredient, ingredientAmount);
+            }
+        }
+
+        controller.StartPop(Vector3.one * plateSize);
+        return pizza;
+    }
+
+
+    public void ComparePizza()
+    {
+        if (mainPizza == null)
+            return;
+
+
+        Vector3 offset = mainPizza.transform.right * 0.3f; 
+        Vector3 comparePosition = mainPizza.transform.position + offset;
+
+        comparePizza = SpawnPizza(comparePosition, mainPizza.transform.rotation);
     }
 
 

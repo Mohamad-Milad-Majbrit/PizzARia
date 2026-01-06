@@ -11,6 +11,8 @@ public class PizzaController : MonoBehaviour
 
     public ParticleSystem startSteam;
 
+    public GameObject Plate;
+
 
     public float duration = 0.6f; 
     public AnimationCurve animationCurve = new AnimationCurve(
