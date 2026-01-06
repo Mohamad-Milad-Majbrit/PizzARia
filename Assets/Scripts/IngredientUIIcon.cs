@@ -11,6 +11,8 @@ public class IngredientUIIcon : MonoBehaviour
 
     public SVGImage icon;
 
+    private Color color = new Color(0.471f, 0.922f, 0.529f, 1.000f);
+
     private IngredientData myData;
 
 
@@ -26,7 +28,7 @@ public class IngredientUIIcon : MonoBehaviour
 
         if (OrderManager.Instance.IsIgredientSelected(myData))
         {
-            background.color = Color.green;
+            background.color = color;
             selectionToggle.SetIsOnWithoutNotify(true);
         }
     }
@@ -38,7 +40,7 @@ public class IngredientUIIcon : MonoBehaviour
 
         if (isOn)
         {
-            background.color = Color.green;
+            background.color = color;
         }
         else
         {

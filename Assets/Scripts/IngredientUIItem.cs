@@ -8,6 +8,7 @@ public class IngredientUIItem : MonoBehaviour
     public TextMeshProUGUI priceText;
     public Toggle selectionToggle;
     public Image background;
+    private Color color = new Color(0.471f, 0.922f, 0.529f, 1.000f);
 
     private IngredientData myData;
 
@@ -39,7 +40,7 @@ public class IngredientUIItem : MonoBehaviour
 
     void UpdatePriceDisplay()
     {
-        int currentSize = OrderManager.Instance.currentSizeIndex;
+        int currentSize = OrderManager.Instance.mainSizeIndex;
 
         float price = myData.GetPriceForSize(currentSize);
 
@@ -52,7 +53,7 @@ public class IngredientUIItem : MonoBehaviour
 
         if (isOn)
         {
-            background.color = Color.green;
+            background.color = color;
         }
         else
         {

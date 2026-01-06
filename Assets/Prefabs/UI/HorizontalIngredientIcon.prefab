@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.VectorGraphics::Unity.VectorGraphics.SVGImage
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.16, b: 0, a: 1}
+  m_Color: {r: 0.13333334, g: 0.30980393, b: 0.1254902, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -369,6 +369,7 @@ MonoBehaviour:
   selectionToggle: {fileID: 8666260331687471641}
   background: {fileID: 6073763940911046525}
   icon: {fileID: 5682473221895967513}
+  color: {r: 0.47058827, g: 0.9215687, b: 0.5294118, a: 0}
 --- !u!222 &9140348748650698218
 CanvasRenderer:
   m_ObjectHideFlags: 0

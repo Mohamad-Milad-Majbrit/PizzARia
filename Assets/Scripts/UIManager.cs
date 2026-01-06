@@ -13,6 +13,16 @@ public class UIManager : MonoBehaviour
     public GameObject showIngredientsButton;
     public GameObject ingredientIcons;
 
+    public GameObject sizeToggleMain;
+    public GameObject sizeToggleCompare;
+
+    private void Start()
+    {
+
+        sizeToggleMain.SetActive(false);
+        sizeToggleCompare.SetActive(false);
+    }
+
 
     public void GenerateIngredientList()
     {
@@ -54,5 +64,29 @@ public class UIManager : MonoBehaviour
         showIngredientsButton.SetActive(true);
     }
 
+
+    /*public void ShowSizeToggles()
+    {
+        sizeToggleMain.SetActive(true);
+        sizeToggleCompare.SetActive(true);
+
+        int sizeIndex = OrderManager.Instance.mainSizeIndex;
+        if (sizeIndex == 0)
+        {
+            Toggle toggleS = sizeToggleMain.transform.Find("ToggleS").GetComponent<Toggle>();
+            toggleS.SetIsOnWithoutNotify(true);
+        }
+        else if (sizeIndex == 1)
+        {
+            Toggle toggleM = sizeToggleMain.transform.Find("ToggleM").GetComponent<Toggle>();
+            toggleM.SetIsOnWithoutNotify(true);
+        }
+        else
+        {
+            Toggle toggleL = sizeToggleMain.transform.Find("ToggleL").GetComponent<Toggle>();
+            toggleL.SetIsOnWithoutNotify(true);
+        }
+        
+    }*/
 
 }

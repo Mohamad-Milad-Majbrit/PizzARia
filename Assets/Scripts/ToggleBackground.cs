@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class ToggleBackground : MonoBehaviour
 {
     public Image background;
-    public Color activeColor = Color.green;
+    public Color activeColor = new Color(0.471f, 0.922f, 0.529f, 1.000f);
     public Color inactiveColor = Color.white;
 
     private Toggle toggle;

@@ -4,6 +4,7 @@ using UnityEngine.XR.ARSubsystems;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlaceOnPlane : MonoBehaviour
 {
@@ -14,15 +15,20 @@ public class PlaceOnPlane : MonoBehaviour
 
     public LayerMask pizzaLayerMask;
 
+    public SizeControllerPizza mainSizeController;
+    public SizeControllerPizza compareSizeController;
+
     private bool planesDetected = false;
     private bool placed = false;
 
     static List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     public UnityEvent OnPizzaPlaced;
+    public UnityEvent OnPizzaCompare;
 
     private GameObject mainPizza;
     private GameObject comparePizza;
+    private Vector3 mainPizzaOriginalPosition;
 
 
     void OnEnable()
@@ -86,7 +92,8 @@ public class PlaceOnPlane : MonoBehaviour
                 Pose pose = hits[0].pose;
                 float plateSize = OrderManager.Instance.GetFloatSize()*2;
 
-                mainPizza = SpawnPizza(pose.position, pose.rotation);
+                mainPizza = SpawnPizza(pose.position, pose.rotation, mainSizeController);
+                mainPizzaOriginalPosition = pose.position;
                 /*mainPizza = Instantiate(OrderManager.Instance.currentPizza.arBaseModelPrefab, pose.position, pose.rotation);
                 mainPizza.transform.localScale = new Vector3(plateSize, plateSize, plateSize);
 
@@ -108,6 +115,7 @@ public class PlaceOnPlane : MonoBehaviour
                     }
                 }
                 toppingController.StartPop(new Vector3(plateSize, plateSize, plateSize));
+                */
                 placed = true;
                 OnPizzaPlaced?.Invoke();
 
@@ -117,12 +125,12 @@ public class PlaceOnPlane : MonoBehaviour
                 {
                     plane.gameObject.SetActive(false);
                 }
-                planeManager.enabled = false; */
+                planeManager.enabled = false; 
             }
         }
     }
 
-    private GameObject SpawnPizza(Vector3 position, Quaternion rotation)
+    private GameObject SpawnPizza(Vector3 position, Quaternion rotation, SizeControllerPizza sizeControllerPizza)
     {
         float plateSize = OrderManager.Instance.GetFloatSize() * 2;
 
@@ -137,8 +145,10 @@ public class PlaceOnPlane : MonoBehaviour
         PizzaController controller = pizza.GetComponent<PizzaController>();
         if (controller == null)
             controller = pizza.AddComponent<PizzaController>();
+        sizeControllerPizza.BindToPizza(controller);
 
         controller.Initialize(plateSize, pizzaLayerMask);
+
 
         int ingredientAmount = OrderManager.Instance.GetFloatIngredientAmount();
         foreach (var ingredient in OrderManager.Instance.allIngredients)
@@ -148,6 +158,7 @@ public class PlaceOnPlane : MonoBehaviour
                 controller.SpawnInitialBatch(ingredient, ingredientAmount);
             }
         }
+        
 
         controller.StartPop(Vector3.one * plateSize);
         return pizza;
@@ -159,59 +170,36 @@ public class PlaceOnPlane : MonoBehaviour
         if (mainPizza == null)
             return;
 
+        if (comparePizza != null)
+        {
+            Destroy(comparePizza);
+            comparePizza = null;
+        }
 
-        Vector3 offset = mainPizza.transform.right * 0.3f; 
-        Vector3 comparePosition = mainPizza.transform.position + offset;
+            float distance = 0.45f;
+        Vector3 right = mainPizza.transform.right;
 
-        comparePizza = SpawnPizza(comparePosition, mainPizza.transform.rotation);
+        Vector3 leftPosition = mainPizzaOriginalPosition - right * (distance * 0.5f);
+        leftPosition.y = mainPizzaOriginalPosition.y;
+        mainPizza.transform.position = leftPosition;
+
+
+        Vector3 rightPosition = mainPizzaOriginalPosition + right * (distance * 0.5f);
+        rightPosition.y = mainPizzaOriginalPosition.y;
+
+
+        comparePizza = SpawnPizza(rightPosition, mainPizza.transform.rotation, compareSizeController);
+        PizzaController controller = comparePizza.GetComponent<PizzaController>();
+        if (controller == null)
+            controller = comparePizza.AddComponent<PizzaController>();
+
+        compareSizeController.BindToPizza(controller);
+
+        OnPizzaCompare.Invoke();
+
     }
 
 
 
-    /*
-    IEnumerator SpawnIngredients(List<IngredientData> ingredients, GameObject pizzaObject, int totalCount, float parentScale, PizzaToppingController controller)
-    {
-        Transform pizzaTransform = pizzaObject.transform;
 
-
-        float normalizedRadius = 0.35f;
-
-
-        for (int i = 0; i < totalCount; i++)
-        {
-            IngredientData ingredient = ingredients[i];
-
-            float r = normalizedRadius * Mathf.Sqrt((float)i / totalCount);
-            float theta = i * Mathf.PI * (3f - Mathf.Sqrt(5f));
-
-            float x = r * Mathf.Cos(theta);
-            float z = r * Mathf.Sin(theta);
-
-            Vector3 rayStartLocal = new Vector3(x, 0.2f, z);
-            Vector3 rayStartWorld = pizzaTransform.TransformPoint(rayStartLocal);
-
-            float spawnDelay = 0.05f;
-
-            if (Physics.Raycast(rayStartWorld, -pizzaTransform.up, out RaycastHit hitInfo, 0.5f, pizzaLayerMask))
-            {
-     
-                GameObject newIngredient = Instantiate(ingredient.arModelPrefab, hitInfo.point, Quaternion.identity);
-                Vector3 originalPrefabScale = ingredient.arModelPrefab.transform.localScale;
-                newIngredient.transform.SetParent(pizzaTransform, true);
-                newIngredient.transform.localScale = new Vector3(
-                    originalPrefabScale.x / parentScale,
-                    originalPrefabScale.y / parentScale,
-                    originalPrefabScale.z / parentScale
-                );
-
-                newIngredient.transform.up = hitInfo.normal;
-
-                newIngredient.transform.Rotate(0, Random.Range(0, 360), 0, Space.Self);
-
-                controller.RegisterTopping(ingredient, newIngredient);
-            }
-
-            yield return new WaitForSeconds(spawnDelay);
-        }
-    }*/
 }

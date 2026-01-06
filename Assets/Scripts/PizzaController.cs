@@ -1,11 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics.HapticsUtility;
 
+
+public enum PizzaRole
+{
+    Main,
+    Compare
+}
 public class PizzaController : MonoBehaviour
 {
     private Dictionary<IngredientData, List<GameObject>> toppingMap = new Dictionary<IngredientData, List<GameObject>>();
 
+    public PizzaRole pizzaRole { get; private set; }
+    public int sizeIndex { get; private set; }
     private float pizzaSize;
     private LayerMask layerMask;
 
@@ -20,6 +29,38 @@ public class PizzaController : MonoBehaviour
         new Keyframe(0.7f, 1.1f), 
         new Keyframe(1, 1)        
     );
+
+    public void SetSizeByIndex(int index)
+    {
+        foreach (var kvp in toppingMap)
+        {
+            IngredientData ingredient = kvp.Key;
+
+            foreach (var obj in kvp.Value)
+            {
+                if (obj != null)
+                    Destroy(obj);
+            }
+        }
+
+        sizeIndex = index;
+
+
+        float scale = OrderManager.Instance.GetFloatSize(pizzaRole) * 2;
+
+        pizzaSize = scale;
+
+        transform.localScale = Vector3.one * scale;
+
+        int ingredientAmount = OrderManager.Instance.GetFloatIngredientAmount(pizzaRole);
+        foreach (var ingredient in OrderManager.Instance.allIngredients)
+        {
+            if (OrderManager.Instance.IsIgredientSelected(ingredient))
+            {
+                SpawnInitialBatch(ingredient, ingredientAmount);
+            }
+        }
+    }
 
     public void StartPop(Vector3 finalScale)
     {
@@ -128,13 +169,15 @@ public class PizzaController : MonoBehaviour
 
                 newIngredient.transform.SetParent(transform, true);
 
+
                 Vector3 originalScale = data.arModelPrefab.transform.localScale;
+
                 newIngredient.transform.localScale = new Vector3(
                     originalScale.x / pizzaSize,
                     originalScale.y / pizzaSize,
                     originalScale.z / pizzaSize
                 );
-    
+
 
                 newIngredient.transform.up = hitInfo.normal;
                 newIngredient.transform.Rotate(0, Random.Range(0, 360), 0, Space.Self);

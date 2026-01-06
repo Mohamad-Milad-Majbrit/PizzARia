@@ -9,6 +9,7 @@ public class ToggleIngredientButton : MonoBehaviour
     public Image buttonImage;
 
     private bool areIngredientsVisible = false;
+    private Color color = new Color(0.471f, 0.922f, 0.529f, 1.000f);
 
     public void ShowIngredientIcons()
     {
@@ -16,7 +17,7 @@ public class ToggleIngredientButton : MonoBehaviour
 
         if (areIngredientsVisible)
         {
-            if (buttonImage != null) buttonImage.color = Color.green;
+            if (buttonImage != null) buttonImage.color = color;
             if (buttonText != null) buttonText.text = "Zutaten ausblenden";
             ingredientIcons.SetActive(true);
         }

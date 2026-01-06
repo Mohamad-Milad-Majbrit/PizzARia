@@ -11,15 +11,16 @@ public class OrderManager : MonoBehaviour
 
 
     public PizzaData currentPizza;
-    public int currentSizeIndex; 
+    public int mainSizeIndex =1; 
+    public int compareSizeIndex =1;
     public List<IngredientData> selectedExtraIngredients = new List<IngredientData>();
 
     public System.Action OnOrderChanged;
     public event Action<IngredientData, bool> OnIngredientToggled;
 
-    public float sizeS = 0.14f;
+    public float sizeS = 0.04f;//0.14f;
     public float sizeM = 0.17f;
-    public float sizeL = 0.19f;
+    public float sizeL = 0.30f; //0.19f;
 
     public int amountS = 3;
     public int amountM = 4;
@@ -41,23 +42,60 @@ public class OrderManager : MonoBehaviour
     {
         currentPizza = pizza;
         selectedExtraIngredients.Clear();
-        currentSizeIndex = 1;
+        mainSizeIndex = 1;
         UpdateOrder();
+    }
+
+    public void SetSizePizzaRole(PizzaRole pizzaRole, int sizeIndex)
+    {
+        if(pizzaRole == PizzaRole.Main)
+        {
+            mainSizeIndex = sizeIndex;
+        }
+        else
+        {
+            compareSizeIndex = sizeIndex;
+        }
+
     }
 
     public void SetSize(int sizeIndex)
     {
-        currentSizeIndex = sizeIndex;
+        mainSizeIndex = sizeIndex;
         UpdateOrder();
     }
 
+
+    public float GetFloatSize(PizzaRole pizzaRole)
+    {
+
+        if (pizzaRole == PizzaRole.Main)
+        {
+            return GetFloatSize();
+        }
+        else
+        {
+            if (mainSizeIndex == 0)
+            {
+                return sizeS;
+            }
+            else if (mainSizeIndex == 1)
+            {
+                return sizeM;
+            }
+            else
+            {
+                return sizeL;
+            }
+        }
+    }
     public float GetFloatSize()
     {
-        if (currentSizeIndex == 0)
+        if (mainSizeIndex == 0)
         {
             return sizeS;
         }
-        else if (currentSizeIndex == 1)
+        else if (mainSizeIndex == 1)
         {
             return sizeM;
         }
@@ -67,13 +105,36 @@ public class OrderManager : MonoBehaviour
         }
     }
 
+
+    public int GetFloatIngredientAmount(PizzaRole pizzaRole)
+    {
+        if(pizzaRole == PizzaRole.Main)
+        {
+            return GetFloatIngredientAmount();
+        } else
+        {
+            if (compareSizeIndex == 0)
+            {
+                return amountS;
+            }
+            else if (compareSizeIndex == 1)
+            {
+                return amountM;
+            }
+            else
+            {
+                return amountL;
+            }
+        }
+
+    }
     public int GetFloatIngredientAmount()
     {
-        if (currentSizeIndex == 0)
+        if (mainSizeIndex == 0)
         {
             return amountS;
         }
-        else if (currentSizeIndex == 1)
+        else if (mainSizeIndex == 1)
         {
             return amountM;
         }
@@ -117,7 +178,7 @@ public class OrderManager : MonoBehaviour
         if (currentPizza == null) return 0;
 
         float basePrice = 0;
-        switch (currentSizeIndex)
+        switch (mainSizeIndex)
         {
             case 0: basePrice = currentPizza.priceSmall; break;
             case 1: basePrice = currentPizza.priceMedium; break;
@@ -127,7 +188,7 @@ public class OrderManager : MonoBehaviour
         float extrasPrice = 0;
         foreach (var ingredient in selectedExtraIngredients)
         {
-            switch (currentSizeIndex)
+            switch (mainSizeIndex)
             {
                 case 0: extrasPrice += ingredient.priceSmall; break;
                 case 1: extrasPrice += ingredient.priceMedium; break;
@@ -143,7 +204,7 @@ public class OrderManager : MonoBehaviour
         if (currentPizza == null) return 0;
 
         float basePrice = 0;
-        switch (currentSizeIndex)
+        switch (mainSizeIndex)
         {
             case 0: basePrice = currentPizza.priceSmall; break;
             case 1: basePrice = currentPizza.priceMedium; break;
