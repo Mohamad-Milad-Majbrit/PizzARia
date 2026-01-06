@@ -6,7 +6,8 @@ public class ScreenManager : MonoBehaviour
 
     [Header("Canvas References")]
     public GameObject ingredientCanvas;       
-    public GameObject arCanvas;         
+    public GameObject arCanvas;
+    public GameObject canvasPizza;
 
     [Header("Managers")]
     public PlaceOnPlane arManager;
@@ -21,7 +22,8 @@ public class ScreenManager : MonoBehaviour
 
     private void Start()
     {
-        ingredientCanvas.SetActive(true);
+        ingredientCanvas.SetActive(false);
+        canvasPizza.SetActive(true);
         arCanvas.SetActive(false);
         uiManager.GenerateIngredientList();
     }
@@ -32,5 +34,12 @@ public class ScreenManager : MonoBehaviour
         arCanvas.SetActive(true);
         arManager.StartARPlacement();
         uiManager.GenerateIngredientIconList();
+    }
+
+    public void ShowIngredientScreen()
+    {
+        ingredientCanvas.SetActive(true);
+        canvasPizza.SetActive(false);
+      
     }
 }
