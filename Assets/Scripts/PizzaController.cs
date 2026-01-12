@@ -62,6 +62,20 @@ public class PizzaController : MonoBehaviour
         }
     }
 
+    public void SetPlateColor(Color color)
+    {
+        if (Plate == null) return;
+
+        Renderer plateRenderer = Plate.GetComponent<Renderer>();
+        if (plateRenderer == null)
+            plateRenderer = Plate.GetComponentInChildren<Renderer>();
+
+        if (plateRenderer != null)
+        {
+            plateRenderer.material.color = color;
+        }
+    }
+
     public void StartPop(Vector3 finalScale)
     {
         StartCoroutine(AnimatePop(finalScale));

@@ -9,6 +9,7 @@ public class IngredientUIItem : MonoBehaviour
     public Toggle selectionToggle;
     public Image background;
     private Color color = new Color(0.471f, 0.922f, 0.529f, 1.000f);
+    private Color textColor = new Color(0.44f, 0.44f, 0.44f, 1.000f);
 
     private IngredientData myData;
 
@@ -54,10 +55,12 @@ public class IngredientUIItem : MonoBehaviour
         if (isOn)
         {
             background.color = color;
+            nameText.color = Color.white;
         }
         else
         {
             background.color = Color.white;
+            nameText.color = textColor;
         }
     }
 

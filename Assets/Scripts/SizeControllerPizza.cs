@@ -35,7 +35,10 @@ public class SizeControllerPizza : MonoBehaviour
         {
             toggleL.SetIsOnWithoutNotify(true);
         }
+    }
 
+    public void Show()
+    {
         gameObject.SetActive(true);
     }
 

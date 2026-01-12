@@ -30,6 +30,15 @@ public class PlaceOnPlane : MonoBehaviour
     private GameObject comparePizza;
     private Vector3 mainPizzaOriginalPosition;
 
+    //private Color mainColor = new Color(0.471f, 0.922f, 0.529f, 1.0f);
+    //private Color compareColor = new Color(0.471f, 0.804f, 0.922f, 1.0f);
+
+    private Color mainColor = new Color(0.85f, 0.96f, 0.88f, 1.0f);
+    private Color compareColor = new Color(0.80f, 0.87f, 0.97f, 1.0f);
+    private Color originalColor = new Color(0.86f, 0.89f, 0.92f,1.0f);
+
+    public bool isComparing { get; private set; } = false;
+
 
     void OnEnable()
     {
@@ -47,6 +56,9 @@ public class PlaceOnPlane : MonoBehaviour
 
         hintScanUI?.SetActive(false);
         hintTapUI?.SetActive(false);
+
+        if (mainSizeController != null) mainSizeController.gameObject.SetActive(false);
+        if (compareSizeController != null) compareSizeController.gameObject.SetActive(false);
     }
 
 
@@ -126,6 +138,7 @@ public class PlaceOnPlane : MonoBehaviour
                     plane.gameObject.SetActive(false);
                 }
                 planeManager.enabled = false; 
+
             }
         }
     }
@@ -167,8 +180,10 @@ public class PlaceOnPlane : MonoBehaviour
 
     public void ComparePizza()
     {
-        if (mainPizza == null)
+        if (mainPizza == null || isComparing)
             return;
+
+        isComparing = true;
 
         if (comparePizza != null)
         {
@@ -176,7 +191,7 @@ public class PlaceOnPlane : MonoBehaviour
             comparePizza = null;
         }
 
-            float distance = 0.45f;
+        float distance = 0.45f;
         Vector3 right = mainPizza.transform.right;
 
         Vector3 leftPosition = mainPizzaOriginalPosition - right * (distance * 0.5f);
@@ -189,14 +204,63 @@ public class PlaceOnPlane : MonoBehaviour
 
 
         comparePizza = SpawnPizza(rightPosition, mainPizza.transform.rotation, compareSizeController);
-        PizzaController controller = comparePizza.GetComponent<PizzaController>();
-        if (controller == null)
-            controller = comparePizza.AddComponent<PizzaController>();
+        PizzaController compareController = comparePizza.GetComponent<PizzaController>();
+        if (compareController == null)
+            compareController = comparePizza.AddComponent<PizzaController>();
 
-        compareSizeController.BindToPizza(controller);
+        compareSizeController.BindToPizza(compareController);
+
+
+        PizzaController mainController = mainPizza.GetComponent<PizzaController>();
+        if (mainController != null)
+        {
+            mainController.SetPlateColor(mainColor);
+        }
+
+        if (compareController != null)
+        {
+            compareController.SetPlateColor(compareColor);
+        }
+
+        if (mainSizeController != null)
+        {
+            mainSizeController.Show(); 
+        }
+
+        if (compareSizeController != null)
+        {
+            compareSizeController.Show(); 
+        }
 
         OnPizzaCompare.Invoke();
 
+    }
+
+    public void StopComparison()
+    {
+        if (!isComparing) return;
+
+        if (comparePizza != null)
+        {
+            Destroy(comparePizza);
+            comparePizza = null;
+        }
+
+        if (mainPizza != null)
+        {
+            mainPizza.transform.position = mainPizzaOriginalPosition;
+
+            PizzaController mainCtrl = mainPizza.GetComponent<PizzaController>();
+            if (mainCtrl != null)
+            {
+                mainCtrl.SetPlateColor(originalColor);
+            }
+        }
+
+        if (mainSizeController != null) mainSizeController.Hide();
+        if (compareSizeController != null) compareSizeController.Hide();
+
+        isComparing = false;
     }
 
 

@@ -5,6 +5,14 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+
+    [Header("Comparison Controls")]
+    public PlaceOnPlane placeOnPlaneScript;
+    public Settings settingsScript;
+    public Button compareButton;
+    public TextMeshProUGUI compareButtonText;
+
+
     public Transform contentArea; 
     public GameObject ingredientPrefab;
     public Transform contentIconArea;
@@ -21,8 +29,27 @@ public class UIManager : MonoBehaviour
 
         sizeToggleMain.SetActive(false);
         sizeToggleCompare.SetActive(false);
+        if (compareButton != null)
+        {
+            compareButton.interactable = false;
+        }
     }
 
+    public void ToggleComparisonMode()
+    {
+        if (placeOnPlaneScript.isComparing)
+        {
+            placeOnPlaneScript.StopComparison();
+            compareButtonText.text = "Pizzen vergleichen";
+            settingsScript.CloseSettings(); 
+        }
+        else
+        {
+            placeOnPlaneScript.ComparePizza();
+            compareButtonText.text = "Pizzenvergleich stoppen";
+            settingsScript.CloseSettings(); 
+        }
+    }
 
     public void GenerateIngredientList()
     {
@@ -37,6 +64,14 @@ public class UIManager : MonoBehaviour
 
             IngredientUIItem script = newRow.GetComponent<IngredientUIItem>();
             script.Setup(ingredient);
+        }
+    }
+
+    public void EnableCompareButton()
+    {
+        if (compareButton != null)
+        {
+            compareButton.interactable = true;
         }
     }
 
@@ -63,30 +98,5 @@ public class UIManager : MonoBehaviour
     {
         showIngredientsButton.SetActive(true);
     }
-
-
-    /*public void ShowSizeToggles()
-    {
-        sizeToggleMain.SetActive(true);
-        sizeToggleCompare.SetActive(true);
-
-        int sizeIndex = OrderManager.Instance.mainSizeIndex;
-        if (sizeIndex == 0)
-        {
-            Toggle toggleS = sizeToggleMain.transform.Find("ToggleS").GetComponent<Toggle>();
-            toggleS.SetIsOnWithoutNotify(true);
-        }
-        else if (sizeIndex == 1)
-        {
-            Toggle toggleM = sizeToggleMain.transform.Find("ToggleM").GetComponent<Toggle>();
-            toggleM.SetIsOnWithoutNotify(true);
-        }
-        else
-        {
-            Toggle toggleL = sizeToggleMain.transform.Find("ToggleL").GetComponent<Toggle>();
-            toggleL.SetIsOnWithoutNotify(true);
-        }
-        
-    }*/
 
 }
