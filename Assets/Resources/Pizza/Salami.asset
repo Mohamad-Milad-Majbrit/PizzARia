@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f20f9e7be94a9c641b8efe1209deb90d, type: 3}
   m_Name: Salami
   m_EditorClassIdentifier: Assembly-CSharp::PizzaData
-  pizzaName: 
-  priceSmall: 0
-  priceMedium: 0
-  priceLarge: 0
-  arBaseModelPrefab: {fileID: 0}
+  pizzaName: Salami
+  priceSmall: 13
+  priceMedium: 15
+  priceLarge: 17
+  arBaseModelPrefab: {fileID: 7987468940686146966, guid: 8527630f36171a84baff39c476495e6b, type: 3}

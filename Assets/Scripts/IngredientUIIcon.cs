@@ -11,6 +11,10 @@ public class IngredientUIIcon : MonoBehaviour
 
     public SVGImage icon;
 
+    private Color color = new Color(0.471f, 0.922f, 0.529f, 1.000f);
+
+    private Color iconColor = new Color(0.44f, 0.44f, 0.44f, 1.000f);
+
     private IngredientData myData;
 
 
@@ -23,10 +27,12 @@ public class IngredientUIIcon : MonoBehaviour
         selectionToggle.onValueChanged.AddListener(OnToggleChanged);
 
         icon.sprite = data.icon;
-
+        icon.color = iconColor;
         if (OrderManager.Instance.IsIgredientSelected(myData))
         {
-            background.color = Color.green;
+            background.color = color;
+            icon.color = Color.white;
+            
             selectionToggle.SetIsOnWithoutNotify(true);
         }
     }
@@ -38,11 +44,13 @@ public class IngredientUIIcon : MonoBehaviour
 
         if (isOn)
         {
-            background.color = Color.green;
+            background.color = color;
+            icon.color = Color.white;
         }
         else
         {
             background.color = Color.white;
+            icon.color = iconColor;
         }
     }
 }

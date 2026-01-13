@@ -5,6 +5,14 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+
+    [Header("Comparison Controls")]
+    public PlaceOnPlane placeOnPlaneScript;
+    public Settings settingsScript;
+    public Button compareButton;
+    public TextMeshProUGUI compareButtonText;
+
+
     public Transform contentArea; 
     public GameObject ingredientPrefab;
     public Transform contentIconArea;
@@ -13,6 +21,35 @@ public class UIManager : MonoBehaviour
     public GameObject showIngredientsButton;
     public GameObject ingredientIcons;
 
+    public GameObject sizeToggleMain;
+    public GameObject sizeToggleCompare;
+
+    private void Start()
+    {
+
+        sizeToggleMain.SetActive(false);
+        sizeToggleCompare.SetActive(false);
+        if (compareButton != null)
+        {
+            compareButton.interactable = false;
+        }
+    }
+
+    public void ToggleComparisonMode()
+    {
+        if (placeOnPlaneScript.isComparing)
+        {
+            placeOnPlaneScript.StopComparison();
+            compareButtonText.text = "Pizzen vergleichen";
+            settingsScript.CloseSettings(); 
+        }
+        else
+        {
+            placeOnPlaneScript.ComparePizza();
+            compareButtonText.text = "Pizzenvergleich stoppen";
+            settingsScript.CloseSettings(); 
+        }
+    }
 
     public void GenerateIngredientList()
     {
@@ -27,6 +64,14 @@ public class UIManager : MonoBehaviour
 
             IngredientUIItem script = newRow.GetComponent<IngredientUIItem>();
             script.Setup(ingredient);
+        }
+    }
+
+    public void EnableCompareButton()
+    {
+        if (compareButton != null)
+        {
+            compareButton.interactable = true;
         }
     }
 
@@ -53,6 +98,5 @@ public class UIManager : MonoBehaviour
     {
         showIngredientsButton.SetActive(true);
     }
-
 
 }

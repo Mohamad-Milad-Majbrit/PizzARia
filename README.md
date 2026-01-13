@@ -79,4 +79,3 @@ Balilikum: https://thenounproject.com/icon/basil-7488088/
 Olive: https://thenounproject.com/icon/olives-5861648/
 Champignon: https://thenounproject.com/icon/champignon-4260011/
 Artischocke: https://thenounproject.com/icon/artichoke-7488151/
-

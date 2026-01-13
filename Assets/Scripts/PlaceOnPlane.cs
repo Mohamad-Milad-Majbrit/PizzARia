@@ -4,6 +4,7 @@ using UnityEngine.XR.ARSubsystems;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using static UnityEngine.Rendering.DebugUI;
 
 public class PlaceOnPlane : MonoBehaviour
 {
@@ -14,12 +15,30 @@ public class PlaceOnPlane : MonoBehaviour
 
     public LayerMask pizzaLayerMask;
 
+    public SizeControllerPizza mainSizeController;
+    public SizeControllerPizza compareSizeController;
+
     private bool planesDetected = false;
     private bool placed = false;
 
     static List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
     public UnityEvent OnPizzaPlaced;
+    public UnityEvent OnPizzaCompare;
+
+    private GameObject mainPizza;
+    private GameObject comparePizza;
+    private Vector3 mainPizzaOriginalPosition;
+
+    //private Color mainColor = new Color(0.471f, 0.922f, 0.529f, 1.0f);
+    //private Color compareColor = new Color(0.471f, 0.804f, 0.922f, 1.0f);
+
+    private Color mainColor = new Color(0.85f, 0.96f, 0.88f, 1.0f);
+    private Color compareColor = new Color(0.80f, 0.87f, 0.97f, 1.0f);
+    private Color originalColor = new Color(0.86f, 0.89f, 0.92f,1.0f);
+
+    public bool isComparing { get; private set; } = false;
+
 
     void OnEnable()
     {
@@ -37,6 +56,9 @@ public class PlaceOnPlane : MonoBehaviour
 
         hintScanUI?.SetActive(false);
         hintTapUI?.SetActive(false);
+
+        if (mainSizeController != null) mainSizeController.gameObject.SetActive(false);
+        if (compareSizeController != null) compareSizeController.gameObject.SetActive(false);
     }
 
 
@@ -82,13 +104,15 @@ public class PlaceOnPlane : MonoBehaviour
                 Pose pose = hits[0].pose;
                 float plateSize = OrderManager.Instance.GetFloatSize()*2;
 
-                GameObject newPizza = Instantiate(OrderManager.Instance.currentPizza.arBaseModelPrefab, pose.position, pose.rotation);
-                newPizza.transform.localScale = new Vector3(plateSize, plateSize, plateSize);
+                mainPizza = SpawnPizza(pose.position, pose.rotation, mainSizeController);
+                mainPizzaOriginalPosition = pose.position;
+                /*mainPizza = Instantiate(OrderManager.Instance.currentPizza.arBaseModelPrefab, pose.position, pose.rotation);
+                mainPizza.transform.localScale = new Vector3(plateSize, plateSize, plateSize);
 
-                PizzaController toppingController = newPizza.GetComponent<PizzaController>();
+                PizzaController toppingController = mainPizza.GetComponent<PizzaController>();
                 if (toppingController == null)
                 {
-                    toppingController = newPizza.AddComponent<PizzaController>();
+                    toppingController = mainPizza.AddComponent<PizzaController>();
                 }
                 toppingController.Initialize(plateSize, pizzaLayerMask);
 
@@ -103,6 +127,7 @@ public class PlaceOnPlane : MonoBehaviour
                     }
                 }
                 toppingController.StartPop(new Vector3(plateSize, plateSize, plateSize));
+                */
                 placed = true;
                 OnPizzaPlaced?.Invoke();
 
@@ -113,56 +138,132 @@ public class PlaceOnPlane : MonoBehaviour
                     plane.gameObject.SetActive(false);
                 }
                 planeManager.enabled = false; 
+
             }
         }
     }
 
-
-
-    /*
-    IEnumerator SpawnIngredients(List<IngredientData> ingredients, GameObject pizzaObject, int totalCount, float parentScale, PizzaToppingController controller)
+    private GameObject SpawnPizza(Vector3 position, Quaternion rotation, SizeControllerPizza sizeControllerPizza)
     {
-        Transform pizzaTransform = pizzaObject.transform;
+        float plateSize = OrderManager.Instance.GetFloatSize() * 2;
+
+        GameObject pizza = Instantiate(
+            OrderManager.Instance.currentPizza.arBaseModelPrefab,
+            position,
+            rotation
+        );
+
+        pizza.transform.localScale = Vector3.one * plateSize;
+
+        PizzaController controller = pizza.GetComponent<PizzaController>();
+        if (controller == null)
+            controller = pizza.AddComponent<PizzaController>();
+        sizeControllerPizza.BindToPizza(controller);
+
+        controller.Initialize(plateSize, pizzaLayerMask);
 
 
-        float normalizedRadius = 0.35f;
-
-
-        for (int i = 0; i < totalCount; i++)
+        int ingredientAmount = OrderManager.Instance.GetFloatIngredientAmount();
+        foreach (var ingredient in OrderManager.Instance.allIngredients)
         {
-            IngredientData ingredient = ingredients[i];
-
-            float r = normalizedRadius * Mathf.Sqrt((float)i / totalCount);
-            float theta = i * Mathf.PI * (3f - Mathf.Sqrt(5f));
-
-            float x = r * Mathf.Cos(theta);
-            float z = r * Mathf.Sin(theta);
-
-            Vector3 rayStartLocal = new Vector3(x, 0.2f, z);
-            Vector3 rayStartWorld = pizzaTransform.TransformPoint(rayStartLocal);
-
-            float spawnDelay = 0.05f;
-
-            if (Physics.Raycast(rayStartWorld, -pizzaTransform.up, out RaycastHit hitInfo, 0.5f, pizzaLayerMask))
+            if (OrderManager.Instance.IsIgredientSelected(ingredient))
             {
-     
-                GameObject newIngredient = Instantiate(ingredient.arModelPrefab, hitInfo.point, Quaternion.identity);
-                Vector3 originalPrefabScale = ingredient.arModelPrefab.transform.localScale;
-                newIngredient.transform.SetParent(pizzaTransform, true);
-                newIngredient.transform.localScale = new Vector3(
-                    originalPrefabScale.x / parentScale,
-                    originalPrefabScale.y / parentScale,
-                    originalPrefabScale.z / parentScale
-                );
-
-                newIngredient.transform.up = hitInfo.normal;
-
-                newIngredient.transform.Rotate(0, Random.Range(0, 360), 0, Space.Self);
-
-                controller.RegisterTopping(ingredient, newIngredient);
+                controller.SpawnInitialBatch(ingredient, ingredientAmount);
             }
-
-            yield return new WaitForSeconds(spawnDelay);
         }
-    }*/
+        
+
+        controller.StartPop(Vector3.one * plateSize);
+        return pizza;
+    }
+
+
+    public void ComparePizza()
+    {
+        if (mainPizza == null || isComparing)
+            return;
+
+        isComparing = true;
+
+        if (comparePizza != null)
+        {
+            Destroy(comparePizza);
+            comparePizza = null;
+        }
+
+        float distance = 0.45f;
+        Vector3 right = mainPizza.transform.right;
+
+        Vector3 leftPosition = mainPizzaOriginalPosition - right * (distance * 0.5f);
+        leftPosition.y = mainPizzaOriginalPosition.y;
+        mainPizza.transform.position = leftPosition;
+
+
+        Vector3 rightPosition = mainPizzaOriginalPosition + right * (distance * 0.5f);
+        rightPosition.y = mainPizzaOriginalPosition.y;
+
+
+        comparePizza = SpawnPizza(rightPosition, mainPizza.transform.rotation, compareSizeController);
+        PizzaController compareController = comparePizza.GetComponent<PizzaController>();
+        if (compareController == null)
+            compareController = comparePizza.AddComponent<PizzaController>();
+
+        compareSizeController.BindToPizza(compareController);
+
+
+        PizzaController mainController = mainPizza.GetComponent<PizzaController>();
+        if (mainController != null)
+        {
+            mainController.SetPlateColor(mainColor);
+        }
+
+        if (compareController != null)
+        {
+            compareController.SetPlateColor(compareColor);
+        }
+
+        if (mainSizeController != null)
+        {
+            mainSizeController.Show(); 
+        }
+
+        if (compareSizeController != null)
+        {
+            compareSizeController.Show(); 
+        }
+
+        OnPizzaCompare.Invoke();
+
+    }
+
+    public void StopComparison()
+    {
+        if (!isComparing) return;
+
+        if (comparePizza != null)
+        {
+            Destroy(comparePizza);
+            comparePizza = null;
+        }
+
+        if (mainPizza != null)
+        {
+            mainPizza.transform.position = mainPizzaOriginalPosition;
+
+            PizzaController mainCtrl = mainPizza.GetComponent<PizzaController>();
+            if (mainCtrl != null)
+            {
+                mainCtrl.SetPlateColor(originalColor);
+            }
+        }
+
+        if (mainSizeController != null) mainSizeController.Hide();
+        if (compareSizeController != null) compareSizeController.Hide();
+
+        isComparing = false;
+    }
+
+
+
+
 }
