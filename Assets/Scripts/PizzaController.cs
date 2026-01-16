@@ -81,6 +81,12 @@ public class PizzaController : MonoBehaviour
         }
     }
 
+    public void SetRole(PizzaRole newRole)
+    {
+        this.pizzaRole = newRole;
+
+    }
+
     public void StartPop(Vector3 finalScale)
     {
         StartCoroutine(AnimatePop(finalScale));
@@ -119,6 +125,31 @@ public class PizzaController : MonoBehaviour
         if (OrderManager.Instance != null)
         {
             OrderManager.Instance.OnIngredientToggled += HandleIngredientToggle;
+
+            OrderManager.Instance.OnPriceVisibilityChanged += HandlePriceVisibility;
+            HandlePriceVisibility(OrderManager.Instance.showPrice);
+
+            OrderManager.Instance.OnOrderChanged += UpdateDisplay;
+            UpdateDisplay();
+        }
+    }
+
+    private void UpdateDisplay()
+    {
+        float totalPrice = OrderManager.Instance.GetTotalPrice(pizzaRole);
+        priceText.text = totalPrice.ToString("0.00") + "€";
+    }
+
+    private void HandlePriceVisibility(bool isVisible)
+    {
+        if (priceTagContainer != null)
+        {
+            priceTagContainer.gameObject.SetActive(isVisible);
+        }
+
+        if (isVisible)
+        {
+            UpdateDisplay();
         }
     }
 
@@ -127,6 +158,8 @@ public class PizzaController : MonoBehaviour
         if (OrderManager.Instance != null)
         {
             OrderManager.Instance.OnIngredientToggled -= HandleIngredientToggle;
+            OrderManager.Instance.OnPriceVisibilityChanged -= HandlePriceVisibility;
+            OrderManager.Instance.OnOrderChanged -= UpdateDisplay;
         }
     }
 
