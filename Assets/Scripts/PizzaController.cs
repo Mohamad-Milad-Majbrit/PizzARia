@@ -27,6 +27,9 @@ public class PizzaController : MonoBehaviour
     public TextMeshPro priceText;
     public GameObject priceTagContainer;
 
+    public TextMeshPro nutritionalValuesText;
+    public GameObject nutritionalValuesTagContainer;
+
 
     public float duration = 0.6f; 
     public AnimationCurve animationCurve = new AnimationCurve(
@@ -116,19 +119,63 @@ public class PizzaController : MonoBehaviour
 
     private void Start()
     {
-        if (OrderManager.Instance != null)
+        if (OrderManager.Instance == null) return;
+
+        OrderManager.Instance.OnIngredientToggled += HandleIngredientToggle;
+        OrderManager.Instance.OnShowNutritionalValuesChanged += HandleNutritionalVisibility;
+        OrderManager.Instance.OnOrderChanged += UpdateDisplay;
+
+        // Initial-UI Zustand
+        HandleNutritionalVisibility(OrderManager.Instance.showNutritionalValues);
+        UpdateDisplay();
+    }
+
+
+
+    private void UpdateDisplay()
+    {
+        if (OrderManager.Instance == null) return;
+
+        // Preis anzeigen (wenn du es willst)
+        if (priceText != null)
         {
-            OrderManager.Instance.OnIngredientToggled += HandleIngredientToggle;
+            float totalPrice = OrderManager.Instance.GetTotalPrice();
+            priceText.text = $"{totalPrice:0.00} €";
         }
+
+        // Nährwerte anzeigen
+        if (nutritionalValuesText != null)
+        {
+            NutritionData n = OrderManager.Instance.GetTotalNutrition(pizzaRole);
+
+            // Format: schön lesbar (du kannst das Layout ändern)
+            nutritionalValuesText.text =
+                $"Kcal: {n.kcal:0}\n" +
+                $"Protein: {n.protein:0.0} g\n" +
+                $"Carbs: {n.carbohydrates:0.0} g\n" +
+                $"Fat: {n.fat:0.0} g";
+        }
+    }
+
+
+    private void HandleNutritionalVisibility(bool isVisible)
+    {
+        if (nutritionalValuesTagContainer != null)
+            nutritionalValuesTagContainer.SetActive(isVisible);
+
+        // Optional: wenn eingeschaltet, direkt refresh
+        if (isVisible) UpdateDisplay();
     }
 
     private void OnDestroy()
     {
-        if (OrderManager.Instance != null)
-        {
-            OrderManager.Instance.OnIngredientToggled -= HandleIngredientToggle;
-        }
+        if (OrderManager.Instance == null) return;
+
+        OrderManager.Instance.OnIngredientToggled -= HandleIngredientToggle;
+        OrderManager.Instance.OnShowNutritionalValuesChanged -= HandleNutritionalVisibility;
+        OrderManager.Instance.OnOrderChanged -= UpdateDisplay;
     }
+
 
     public void RegisterTopping(IngredientData data, GameObject toppingObj)
     {

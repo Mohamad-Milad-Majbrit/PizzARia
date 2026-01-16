@@ -8,6 +8,10 @@ public class PizzaData : ScriptableObject
     public float priceSmall;
     public float priceMedium;
     public float priceLarge;
+    public float kcal;
+    public float protein;
+    public float carbohydrates;
+    public float fat;
     public GameObject arBaseModelPrefab;
 
     public float GetPriceForSize(int sizeIndex)
@@ -20,4 +24,17 @@ public class PizzaData : ScriptableObject
             default: return priceMedium;
         }
     }
+
+    public NutritionData GetNutrition()
+    {
+        return new NutritionData
+        {
+            kcal = kcal,
+            protein = protein,
+            carbohydrates = carbohydrates,
+            fat = fat
+        };
+    }
+
+
 }

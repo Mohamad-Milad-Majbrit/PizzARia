@@ -9,22 +9,26 @@ public class OrderManager : MonoBehaviour
     public List<PizzaData> allPizzas;
     public List<IngredientData> allIngredients;
 
-
     public PizzaData currentPizza;
-    public int mainSizeIndex =1; 
-    public int compareSizeIndex =1;
+    public int mainSizeIndex = 1;
+    public int compareSizeIndex = 1;
     public List<IngredientData> selectedExtraIngredients = new List<IngredientData>();
 
-    public System.Action OnOrderChanged;
+    public Action OnOrderChanged;
     public event Action<IngredientData, bool> OnIngredientToggled;
 
-    public float sizeS = 0.04f;//0.14f;
+    // (Bei dir scheinen das AR-Scale Werte zu sein, NICHT Nutrition)
+    public float sizeS = 0.04f;
     public float sizeM = 0.17f;
-    public float sizeL = 0.30f; //0.19f;
+    public float sizeL = 0.30f;
 
+    // Bei dir: vermutlich "max extra ingredients" oder ähnliches
     public int amountS = 3;
     public int amountM = 4;
     public int amountL = 5;
+
+    public bool showNutritionalValues = false;
+    public event Action<bool> OnShowNutritionalValuesChanged;
 
     private void Awake()
     {
@@ -37,7 +41,6 @@ public class OrderManager : MonoBehaviour
         if (allPizzas.Count > 0) SelectPizza(allPizzas[0]);
     }
 
-
     public void SelectPizza(PizzaData pizza)
     {
         currentPizza = pizza;
@@ -48,15 +51,12 @@ public class OrderManager : MonoBehaviour
 
     public void SetSizePizzaRole(PizzaRole pizzaRole, int sizeIndex)
     {
-        if(pizzaRole == PizzaRole.Main)
-        {
+        if (pizzaRole == PizzaRole.Main)
             mainSizeIndex = sizeIndex;
-        }
         else
-        {
             compareSizeIndex = sizeIndex;
-        }
 
+        UpdateOrder();
     }
 
     public void SetSize(int sizeIndex)
@@ -65,84 +65,65 @@ public class OrderManager : MonoBehaviour
         UpdateOrder();
     }
 
+    // =========================
+    // Size / Amount helpers
+    // =========================
 
     public float GetFloatSize(PizzaRole pizzaRole)
     {
-
         if (pizzaRole == PizzaRole.Main)
-        {
             return GetFloatSize();
-        }
-        else
-        {
-            if (mainSizeIndex == 0)
-            {
-                return sizeS;
-            }
-            else if (mainSizeIndex == 1)
-            {
-                return sizeM;
-            }
-            else
-            {
-                return sizeL;
-            }
-        }
+
+        // BUGFIX: hier compareSizeIndex verwenden
+        if (compareSizeIndex == 0) return sizeS;
+        if (compareSizeIndex == 1) return sizeM;
+        return sizeL;
     }
+
     public float GetFloatSize()
     {
-        if (mainSizeIndex == 0)
-        {
-            return sizeS;
-        }
-        else if (mainSizeIndex == 1)
-        {
-            return sizeM;
-        }
-        else
-        {
-            return sizeL;
-        }
+        if (mainSizeIndex == 0) return sizeS;
+        if (mainSizeIndex == 1) return sizeM;
+        return sizeL;
     }
-
 
     public int GetFloatIngredientAmount(PizzaRole pizzaRole)
     {
-        if(pizzaRole == PizzaRole.Main)
-        {
+        if (pizzaRole == PizzaRole.Main)
             return GetFloatIngredientAmount();
-        } else
-        {
-            if (compareSizeIndex == 0)
-            {
-                return amountS;
-            }
-            else if (compareSizeIndex == 1)
-            {
-                return amountM;
-            }
-            else
-            {
-                return amountL;
-            }
-        }
 
+        if (compareSizeIndex == 0) return amountS;
+        if (compareSizeIndex == 1) return amountM;
+        return amountL;
     }
+
     public int GetFloatIngredientAmount()
     {
-        if (mainSizeIndex == 0)
+        if (mainSizeIndex == 0) return amountS;
+        if (mainSizeIndex == 1) return amountM;
+        return amountL;
+    }
+
+    private int GetSizeIndex(PizzaRole role)
+    {
+        return role == PizzaRole.Main ? mainSizeIndex : compareSizeIndex;
+    }
+
+    // Nutrition-Faktor nach Größe (weil PizzaData nur 1x kcal/protein/... hat)
+    private float GetNutritionFactor(int sizeIndex)
+    {
+        switch (sizeIndex)
         {
-            return amountS;
-        }
-        else if (mainSizeIndex == 1)
-        {
-            return amountM;
-        }
-        else
-        {
-            return amountL;
+            case 0: return 0.85f; // Small
+            case 1: return 1.00f; // Medium
+            case 2: return 1.15f; // Large
+            default: return 1.00f;
         }
     }
+
+    // =========================
+    // Ingredient toggles
+    // =========================
 
     public void ToggleIngredient(IngredientData ingredient)
     {
@@ -156,23 +137,25 @@ public class OrderManager : MonoBehaviour
             selectedExtraIngredients.Add(ingredient);
             OnIngredientToggled?.Invoke(ingredient, true);
         }
+
         UpdateOrder();
     }
 
     public void TogglePizzen(PizzaData pizzaData)
     {
         currentPizza = pizzaData;
-
+        UpdateOrder();
     }
 
     public bool IsIgredientSelected(IngredientData ingredientData)
     {
-        if (selectedExtraIngredients.Contains(ingredientData))
-        {
-            return true;
-        }
-        return false;
+        return selectedExtraIngredients.Contains(ingredientData);
     }
+
+    // =========================
+    // Price
+    // =========================
+
     public float GetTotalPrice()
     {
         if (currentPizza == null) return 0;
@@ -203,23 +186,75 @@ public class OrderManager : MonoBehaviour
     {
         if (currentPizza == null) return 0;
 
-        float basePrice = 0;
         switch (mainSizeIndex)
         {
-            case 0: basePrice = currentPizza.priceSmall; break;
-            case 1: basePrice = currentPizza.priceMedium; break;
-            case 2: basePrice = currentPizza.priceLarge; break;
+            case 0: return currentPizza.priceSmall;
+            case 1: return currentPizza.priceMedium;
+            case 2: return currentPizza.priceLarge;
+            default: return currentPizza.priceMedium;
         }
-        return basePrice ;
     }
+
+    // =========================
+    // Nutrition (ALL IN ONE)
+    // =========================
+
+    private float referenceRadius = 0.5f; // Prefab: 1m Durchmesser => 0.5m Radius
+
+    private float GetAreaFactor(PizzaRole role)
+    {
+        float currentRadius = GetFloatSize(role); // echte Meter
+        return Mathf.Pow(currentRadius / referenceRadius, 2f);
+    }
+
+    public NutritionData GetTotalNutrition(PizzaRole role)
+    {
+        NutritionData total = new NutritionData();
+        if (currentPizza == null) return total;
+
+        float areaFactor = GetAreaFactor(role);
+
+        // Base Pizza (flächenbasiert)
+        total = total + (currentPizza.GetNutrition() * areaFactor);
+
+        // Extras (ebenfalls flächenbasiert)
+        foreach (var ingredient in selectedExtraIngredients)
+        {
+            total = total + (ingredient.GetNutrition() * areaFactor);
+        }
+
+        return total;
+    }
+
+
+    // Optional: Wrapper, falls du manchmal nur einen Wert brauchst
+    public float GetTotalFat(PizzaRole role) => GetTotalNutrition(role).fat;
+    public float GetTotalKcal(PizzaRole role) => GetTotalNutrition(role).kcal;
+    public float GetTotalProtein(PizzaRole role) => GetTotalNutrition(role).protein;
+    public float GetTotalCarbs(PizzaRole role) => GetTotalNutrition(role).carbohydrates;
+
+    // =========================
+    // Misc
+    // =========================
 
     public string GetPizzaName()
     {
         if (currentPizza == null) return "keine Pizza";
-        return currentPizza.name;
-
+        return currentPizza.pizzaName; // BUGFIX: du hast pizzaName im ScriptableObject
     }
 
+    public void ToggleNutritionalVisibility()
+    {
+        showNutritionalValues = !showNutritionalValues;
+        OnShowNutritionalValuesChanged?.Invoke(showNutritionalValues);
+    }
+
+    public void SetNutritionalVisibility(bool value)
+    {
+        if (showNutritionalValues == value) return;
+        showNutritionalValues = value;
+        OnShowNutritionalValuesChanged?.Invoke(showNutritionalValues);
+    }
 
     private void UpdateOrder()
     {
