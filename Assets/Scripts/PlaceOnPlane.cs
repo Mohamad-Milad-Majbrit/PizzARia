@@ -153,7 +153,7 @@ public class PlaceOnPlane : MonoBehaviour
             rotation
         );
 
-        pizza.transform.localScale = Vector3.one * plateSize;
+        //pizza.transform.localScale = Vector3.one * plateSize;
 
         PizzaController controller = pizza.GetComponent<PizzaController>();
         if (controller == null)
