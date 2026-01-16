@@ -28,6 +28,6 @@ public class PizzaDisplay : MonoBehaviour
 
         priceText.text = "" + price.ToString("0.00") + " €";
 
-        pizzaNameText.text = OrderManager.Instance.GetPizzaName();
+        pizzaNameText.text = "Pizza " + OrderManager.Instance.GetPizzaName();
     }
 }

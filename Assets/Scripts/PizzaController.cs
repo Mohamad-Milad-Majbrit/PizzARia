@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using static UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics.HapticsUtility;
 
 
 public enum PizzaRole
@@ -20,7 +20,12 @@ public class PizzaController : MonoBehaviour
 
     public ParticleSystem startSteam;
 
-    public GameObject Plate;
+    public GameObject plate;
+
+    public GameObject pizza;
+
+    public TextMeshPro priceText;
+    public GameObject priceTagContainer;
 
 
     public float duration = 0.6f; 
@@ -50,7 +55,7 @@ public class PizzaController : MonoBehaviour
 
         pizzaSize = scale;
 
-        transform.localScale = Vector3.one * scale;
+        pizza.transform.localScale = Vector3.one * scale;
 
         int ingredientAmount = OrderManager.Instance.GetFloatIngredientAmount(pizzaRole);
         foreach (var ingredient in OrderManager.Instance.allIngredients)
@@ -64,11 +69,11 @@ public class PizzaController : MonoBehaviour
 
     public void SetPlateColor(Color color)
     {
-        if (Plate == null) return;
+        if (plate == null) return;
 
-        Renderer plateRenderer = Plate.GetComponent<Renderer>();
+        Renderer plateRenderer = plate.GetComponent<Renderer>();
         if (plateRenderer == null)
-            plateRenderer = Plate.GetComponentInChildren<Renderer>();
+            plateRenderer = plate.GetComponentInChildren<Renderer>();
 
         if (plateRenderer != null)
         {
@@ -85,7 +90,7 @@ public class PizzaController : MonoBehaviour
     {
         float timer = 0f;
 
-        transform.localScale = Vector3.zero;
+        pizza.transform.localScale = Vector3.zero;
 
         while (timer < duration)
         {
@@ -94,15 +99,16 @@ public class PizzaController : MonoBehaviour
 
             float curveValue = animationCurve.Evaluate(progress);
 
-            transform.localScale = targetScale * curveValue;
+            pizza.transform.localScale = targetScale * curveValue;
 
             yield return null;
         }
 
-        transform.localScale = targetScale;
+        pizza.transform.localScale = targetScale;
     }
     public void Initialize(float size, LayerMask mask)
     {
+        pizza.transform.localScale = Vector3.one * size;
         this.pizzaSize = size;
         this.layerMask = mask;
         startSteam.Play();
@@ -174,14 +180,14 @@ public class PizzaController : MonoBehaviour
             float z = r * Mathf.Sin(theta);
 
             Vector3 rayStartLocal = new Vector3(x, 0.2f, z);
-            Vector3 rayStartWorld = transform.TransformPoint(rayStartLocal);
+            Vector3 rayStartWorld = pizza.transform.TransformPoint(rayStartLocal);
 
-            if (Physics.Raycast(rayStartWorld, -transform.up, out RaycastHit hitInfo, 0.5f, layerMask))
+            if (Physics.Raycast(rayStartWorld, -pizza.transform.up, out RaycastHit hitInfo, 0.5f, layerMask))
             {
                 GameObject newIngredient = Instantiate(data.arModelPrefab, hitInfo.point, Quaternion.identity);
 
 
-                newIngredient.transform.SetParent(transform, true);
+                newIngredient.transform.SetParent(pizza.transform, true);
 
 
                 Vector3 originalScale = data.arModelPrefab.transform.localScale;
