@@ -17,9 +17,9 @@ public class OrderManager : MonoBehaviour
     public Action OnOrderChanged;
     public event Action<IngredientData, bool> OnIngredientToggled;
 
-    public float sizeS = 0.04f;
+    public float sizeS = 0.14f;//0.14f;
     public float sizeM = 0.17f;
-    public float sizeL = 0.30f;
+    public float sizeL = 0.19f; //0.19f;
 
     
     public int amountS = 3;
@@ -28,6 +28,8 @@ public class OrderManager : MonoBehaviour
 
     public bool showNutritionalValues = false;
     public event Action<bool> OnShowNutritionalValuesChanged;
+    public bool showPrice = false;
+    public event Action<bool> OnPriceVisibilityChanged;
 
     private void Awake()
     {
@@ -51,9 +53,12 @@ public class OrderManager : MonoBehaviour
     public void SetSizePizzaRole(PizzaRole pizzaRole, int sizeIndex)
     {
         if (pizzaRole == PizzaRole.Main)
+        {
             mainSizeIndex = sizeIndex;
         else
             compareSizeIndex = sizeIndex;
+        }
+        OnOrderChanged.Invoke();
 
         UpdateOrder();
     }
@@ -108,7 +113,7 @@ public class OrderManager : MonoBehaviour
         return role == PizzaRole.Main ? mainSizeIndex : compareSizeIndex;
     }
 
-    // Nutrition-Faktor nach Größe (weil PizzaData nur 1x kcal/protein/... hat)
+    // Nutrition-Faktor nach Grï¿½ï¿½e (weil PizzaData nur 1x kcal/protein/... hat)
     private float GetNutritionFactor(int sizeIndex)
     {
         switch (sizeIndex)
@@ -181,6 +186,36 @@ public class OrderManager : MonoBehaviour
         return basePrice + extrasPrice;
     }
 
+
+
+    public float GetTotalPrice(PizzaRole role)
+    {
+        if (currentPizza == null) return 0;
+
+        int sizeIndexToCheck = (role == PizzaRole.Main) ? mainSizeIndex : compareSizeIndex;
+
+        float basePrice = 0;
+        switch (sizeIndexToCheck)
+        {
+            case 0: basePrice = currentPizza.priceSmall; break;
+            case 1: basePrice = currentPizza.priceMedium; break;
+            case 2: basePrice = currentPizza.priceLarge; break;
+        }
+
+        float extrasPrice = 0;
+        foreach (var ingredient in selectedExtraIngredients)
+        {
+            switch (sizeIndexToCheck)
+            {
+                case 0: extrasPrice += ingredient.priceSmall; break;
+                case 1: extrasPrice += ingredient.priceMedium; break;
+                case 2: extrasPrice += ingredient.priceLarge; break;
+            }
+        }
+
+        return basePrice + extrasPrice;
+    }
+
     public float GetPizzaPrice()
     {
         if (currentPizza == null) return 0;
@@ -213,10 +248,10 @@ public class OrderManager : MonoBehaviour
 
         float areaFactor = GetAreaFactor(role);
 
-        // Base Pizza (flächenbasiert)
+        // Base Pizza (flï¿½chenbasiert)
         total = total + (currentPizza.GetNutrition() * areaFactor);
 
-        // Extras (ebenfalls flächenbasiert)
+        // Extras (ebenfalls flï¿½chenbasiert)
         foreach (var ingredient in selectedExtraIngredients)
         {
             total = total + (ingredient.GetNutrition() * areaFactor);
@@ -253,11 +288,15 @@ public class OrderManager : MonoBehaviour
         if (showNutritionalValues == value) return;
         showNutritionalValues = value;
         OnShowNutritionalValuesChanged?.Invoke(showNutritionalValues);
+    public void TogglePriceVisibility()
+    {
+        showPrice = !showPrice;
+        OnPriceVisibilityChanged?.Invoke(showPrice);
     }
 
     private void UpdateOrder()
     {
-        Debug.Log("Neuer Preis: " + GetTotalPrice() + " €");
+        Debug.Log("Neuer Preis: " + GetTotalPrice() + " ï¿½");
         OnOrderChanged?.Invoke();
     }
 }

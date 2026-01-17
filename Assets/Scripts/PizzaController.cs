@@ -84,6 +84,12 @@ public class PizzaController : MonoBehaviour
         }
     }
 
+    public void SetRole(PizzaRole newRole)
+    {
+        this.pizzaRole = newRole;
+
+    }
+
     public void StartPop(Vector3 finalScale)
     {
         StartCoroutine(AnimatePop(finalScale));
@@ -136,7 +142,7 @@ public class PizzaController : MonoBehaviour
     {
         if (OrderManager.Instance == null) return;
 
-        // Nährwerte anzeigen
+        // Nï¿½hrwerte anzeigen
         if (nutritionalValuesText != null)
         {
             NutritionData n = OrderManager.Instance.GetTotalNutrition(pizzaRole);
@@ -147,6 +153,23 @@ public class PizzaController : MonoBehaviour
                 $"Protein: {n.protein:0.0} g\n" +
                 $"Carbs: {n.carbohydrates:0.0} g\n" +
                 $"Fat: {n.fat:0.0} g";
+        }
+
+        float totalPrice = OrderManager.Instance.GetTotalPrice(pizzaRole);
+        priceText.text = totalPrice.ToString("0.00") + "ï¿½";
+    }
+
+
+    private void HandlePriceVisibility(bool isVisible)
+    {
+        if (priceTagContainer != null)
+        {
+            priceTagContainer.gameObject.SetActive(isVisible);
+        }
+
+        if (isVisible)
+        {
+            UpdateDisplay();
         }
     }
 
@@ -162,11 +185,13 @@ public class PizzaController : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (OrderManager.Instance == null) return;
-
-        OrderManager.Instance.OnIngredientToggled -= HandleIngredientToggle;
-        OrderManager.Instance.OnShowNutritionalValuesChanged -= HandleNutritionalVisibility;
-        OrderManager.Instance.OnOrderChanged -= UpdateDisplay;
+        if (OrderManager.Instance != null)
+        {
+            OrderManager.Instance.OnIngredientToggled -= HandleIngredientToggle;
+            OrderManager.Instance.OnPriceVisibilityChanged -= HandlePriceVisibility;
+            OrderManager.Instance.OnShowNutritionalValuesChanged -= HandleNutritionalVisibility;
+            OrderManager.Instance.OnOrderChanged -= UpdateDisplay;
+        }
     }
 
 

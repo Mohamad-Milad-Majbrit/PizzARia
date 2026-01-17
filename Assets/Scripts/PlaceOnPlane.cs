@@ -4,7 +4,6 @@ using UnityEngine.XR.ARSubsystems;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
-using static UnityEngine.Rendering.DebugUI;
 
 public class PlaceOnPlane : MonoBehaviour
 {
@@ -161,7 +160,7 @@ public class PlaceOnPlane : MonoBehaviour
         sizeControllerPizza.BindToPizza(controller);
 
         controller.Initialize(plateSize, pizzaLayerMask);
-
+        controller.SetRole(PizzaRole.Main);
 
         int ingredientAmount = OrderManager.Instance.GetFloatIngredientAmount();
         foreach (var ingredient in OrderManager.Instance.allIngredients)
@@ -207,7 +206,7 @@ public class PlaceOnPlane : MonoBehaviour
         PizzaController compareController = comparePizza.GetComponent<PizzaController>();
         if (compareController == null)
             compareController = comparePizza.AddComponent<PizzaController>();
-
+        compareController.SetRole(PizzaRole.Compare);
         compareSizeController.BindToPizza(compareController);
 
 
