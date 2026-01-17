@@ -55,7 +55,8 @@ public class OrderManager : MonoBehaviour
         if (pizzaRole == PizzaRole.Main)
         {
             mainSizeIndex = sizeIndex;
-        else
+        }
+        else { 
             compareSizeIndex = sizeIndex;
         }
         OnOrderChanged.Invoke();
@@ -108,22 +109,7 @@ public class OrderManager : MonoBehaviour
         return amountL;
     }
 
-    private int GetSizeIndex(PizzaRole role)
-    {
-        return role == PizzaRole.Main ? mainSizeIndex : compareSizeIndex;
-    }
 
-    // Nutrition-Faktor nach Gr��e (weil PizzaData nur 1x kcal/protein/... hat)
-    private float GetNutritionFactor(int sizeIndex)
-    {
-        switch (sizeIndex)
-        {
-            case 0: return 0.85f; // Small
-            case 1: return 1.00f; // Medium
-            case 2: return 1.15f; // Large
-            default: return 1.00f;
-        }
-    }
 
     // =========================
     // Ingredient toggles
@@ -141,6 +127,8 @@ public class OrderManager : MonoBehaviour
             selectedExtraIngredients.Add(ingredient);
             OnIngredientToggled?.Invoke(ingredient, true);
         }
+
+        Debug.Log(selectedExtraIngredients.Count);
 
         UpdateOrder();
     }
@@ -241,6 +229,8 @@ public class OrderManager : MonoBehaviour
         return Mathf.Pow(currentRadius / referenceRadius, 2f);
     }
 
+ 
+
     public NutritionData GetTotalNutrition(PizzaRole role)
     {
         NutritionData total = new NutritionData();
@@ -251,10 +241,17 @@ public class OrderManager : MonoBehaviour
         // Base Pizza (fl�chenbasiert)
         total = total + (currentPizza.GetNutrition() * areaFactor);
 
-        // Extras (ebenfalls fl�chenbasiert)
+        int sizeIndexToCheck = (role == PizzaRole.Main) ? mainSizeIndex : compareSizeIndex;
+
         foreach (var ingredient in selectedExtraIngredients)
         {
-            total = total + (ingredient.GetNutrition() * areaFactor);
+
+            switch (sizeIndexToCheck)
+            {
+                case 0: total += ingredient.GetNutrition() * amountS; break;
+                case 1: total += ingredient.GetNutrition() * amountM; break;
+                case 2: total += ingredient.GetNutrition() * amountL; break;
+            }
         }
 
         return total;
@@ -288,6 +285,7 @@ public class OrderManager : MonoBehaviour
         if (showNutritionalValues == value) return;
         showNutritionalValues = value;
         OnShowNutritionalValuesChanged?.Invoke(showNutritionalValues);
+    }
     public void TogglePriceVisibility()
     {
         showPrice = !showPrice;

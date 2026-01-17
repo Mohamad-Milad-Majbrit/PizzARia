@@ -129,10 +129,12 @@ public class PizzaController : MonoBehaviour
 
         OrderManager.Instance.OnIngredientToggled += HandleIngredientToggle;
         OrderManager.Instance.OnShowNutritionalValuesChanged += HandleNutritionalVisibility;
+        OrderManager.Instance.OnPriceVisibilityChanged += HandlePriceVisibility;
         OrderManager.Instance.OnOrderChanged += UpdateDisplay;
 
         // Initial-UI Zustand
         HandleNutritionalVisibility(OrderManager.Instance.showNutritionalValues);
+        HandlePriceVisibility(OrderManager.Instance.showPrice);
         UpdateDisplay();
     }
 
@@ -149,14 +151,15 @@ public class PizzaController : MonoBehaviour
 
             // Format
             nutritionalValuesText.text =
-                $"Kcal: {n.kcal:0}\n" +
-                $"Protein: {n.protein:0.0} g\n" +
-                $"Carbs: {n.carbohydrates:0.0} g\n" +
-                $"Fat: {n.fat:0.0} g";
+                $"Nährwerte:\n" +
+                $"Eiweiß {n.protein:0.0} g\n" +
+                $"Kohlenhydrate {n.carbohydrates:0.0} g\n" +
+                $"Fett {n.fat:0.0} g\n"+
+                $"{n.kcal:0} kcal" ;
         }
 
         float totalPrice = OrderManager.Instance.GetTotalPrice(pizzaRole);
-        priceText.text = totalPrice.ToString("0.00") + "�";
+        priceText.text = totalPrice.ToString("0.00") + " €";
     }
 
 
@@ -227,7 +230,7 @@ public class PizzaController : MonoBehaviour
 
     private IEnumerator SpawnSingleIngredientType(IngredientData data, int count)
     {
-
+        Debug.Log("Spawn Ingedient");
         toppingMap[data] = new List<GameObject>();
 
         float normalizedRadius = 0.35f;
