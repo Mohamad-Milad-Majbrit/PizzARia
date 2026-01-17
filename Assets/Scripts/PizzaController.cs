@@ -136,19 +136,12 @@ public class PizzaController : MonoBehaviour
     {
         if (OrderManager.Instance == null) return;
 
-        // Preis anzeigen (wenn du es willst)
-        if (priceText != null)
-        {
-            float totalPrice = OrderManager.Instance.GetTotalPrice();
-            priceText.text = $"{totalPrice:0.00} €";
-        }
-
         // Nährwerte anzeigen
         if (nutritionalValuesText != null)
         {
             NutritionData n = OrderManager.Instance.GetTotalNutrition(pizzaRole);
 
-            // Format: schön lesbar (du kannst das Layout ändern)
+            // Format
             nutritionalValuesText.text =
                 $"Kcal: {n.kcal:0}\n" +
                 $"Protein: {n.protein:0.0} g\n" +
@@ -163,7 +156,7 @@ public class PizzaController : MonoBehaviour
         if (nutritionalValuesTagContainer != null)
             nutritionalValuesTagContainer.SetActive(isVisible);
 
-        // Optional: wenn eingeschaltet, direkt refresh
+        //  wenn eingeschaltet, direkt refresh
         if (isVisible) UpdateDisplay();
     }
 

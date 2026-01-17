@@ -17,12 +17,11 @@ public class OrderManager : MonoBehaviour
     public Action OnOrderChanged;
     public event Action<IngredientData, bool> OnIngredientToggled;
 
-    // (Bei dir scheinen das AR-Scale Werte zu sein, NICHT Nutrition)
     public float sizeS = 0.04f;
     public float sizeM = 0.17f;
     public float sizeL = 0.30f;
 
-    // Bei dir: vermutlich "max extra ingredients" oder ähnliches
+    
     public int amountS = 3;
     public int amountM = 4;
     public int amountL = 5;
@@ -227,7 +226,7 @@ public class OrderManager : MonoBehaviour
     }
 
 
-    // Optional: Wrapper, falls du manchmal nur einen Wert brauchst
+    // Wrapper, falls manchmal nur einen Wert 
     public float GetTotalFat(PizzaRole role) => GetTotalNutrition(role).fat;
     public float GetTotalKcal(PizzaRole role) => GetTotalNutrition(role).kcal;
     public float GetTotalProtein(PizzaRole role) => GetTotalNutrition(role).protein;
@@ -240,7 +239,7 @@ public class OrderManager : MonoBehaviour
     public string GetPizzaName()
     {
         if (currentPizza == null) return "keine Pizza";
-        return currentPizza.pizzaName; // BUGFIX: du hast pizzaName im ScriptableObject
+        return currentPizza.pizzaName; 
     }
 
     public void ToggleNutritionalVisibility()
