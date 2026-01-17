@@ -20,4 +20,5 @@ public class PizzaData : ScriptableObject
             default: return priceMedium;
         }
     }
+
 }
