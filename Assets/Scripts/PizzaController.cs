@@ -27,6 +27,9 @@ public class PizzaController : MonoBehaviour
     public TextMeshPro priceText;
     public GameObject priceTagContainer;
 
+    public TextMeshPro nutritionalValuesText;
+    public GameObject nutritionalValuesTagContainer;
+
 
     public float duration = 0.6f; 
     public AnimationCurve animationCurve = new AnimationCurve(
@@ -122,23 +125,43 @@ public class PizzaController : MonoBehaviour
 
     private void Start()
     {
-        if (OrderManager.Instance != null)
-        {
-            OrderManager.Instance.OnIngredientToggled += HandleIngredientToggle;
+        if (OrderManager.Instance == null) return;
 
-            OrderManager.Instance.OnPriceVisibilityChanged += HandlePriceVisibility;
-            HandlePriceVisibility(OrderManager.Instance.showPrice);
+        OrderManager.Instance.OnIngredientToggled += HandleIngredientToggle;
+        OrderManager.Instance.OnShowNutritionalValuesChanged += HandleNutritionalVisibility;
+        OrderManager.Instance.OnPriceVisibilityChanged += HandlePriceVisibility;
+        OrderManager.Instance.OnOrderChanged += UpdateDisplay;
 
-            OrderManager.Instance.OnOrderChanged += UpdateDisplay;
-            UpdateDisplay();
-        }
+        // Initial-UI Zustand
+        HandleNutritionalVisibility(OrderManager.Instance.showNutritionalValues);
+        HandlePriceVisibility(OrderManager.Instance.showPrice);
+        UpdateDisplay();
     }
+
+
 
     private void UpdateDisplay()
     {
+        if (OrderManager.Instance == null) return;
+
+        // N�hrwerte anzeigen
+        if (nutritionalValuesText != null)
+        {
+            NutritionData n = OrderManager.Instance.GetTotalNutrition(pizzaRole);
+
+            // Format
+            nutritionalValuesText.text =
+                $"Nährwerte:\n" +
+                $"Eiweiß {n.protein:0.0} g\n" +
+                $"Kohlenhydrate {n.carbohydrates:0.0} g\n" +
+                $"Fett {n.fat:0.0} g\n"+
+                $"{n.kcal:0} kcal" ;
+        }
+
         float totalPrice = OrderManager.Instance.GetTotalPrice(pizzaRole);
-        priceText.text = totalPrice.ToString("0.00") + "�";
+        priceText.text = totalPrice.ToString("0.00") + " €";
     }
+
 
     private void HandlePriceVisibility(bool isVisible)
     {
@@ -153,15 +176,27 @@ public class PizzaController : MonoBehaviour
         }
     }
 
+
+    private void HandleNutritionalVisibility(bool isVisible)
+    {
+        if (nutritionalValuesTagContainer != null)
+            nutritionalValuesTagContainer.SetActive(isVisible);
+
+        //  wenn eingeschaltet, direkt refresh
+        if (isVisible) UpdateDisplay();
+    }
+
     private void OnDestroy()
     {
         if (OrderManager.Instance != null)
         {
             OrderManager.Instance.OnIngredientToggled -= HandleIngredientToggle;
             OrderManager.Instance.OnPriceVisibilityChanged -= HandlePriceVisibility;
+            OrderManager.Instance.OnShowNutritionalValuesChanged -= HandleNutritionalVisibility;
             OrderManager.Instance.OnOrderChanged -= UpdateDisplay;
         }
     }
+
 
     public void RegisterTopping(IngredientData data, GameObject toppingObj)
     {
@@ -195,7 +230,7 @@ public class PizzaController : MonoBehaviour
 
     private IEnumerator SpawnSingleIngredientType(IngredientData data, int count)
     {
-
+        Debug.Log("Spawn Ingedient");
         toppingMap[data] = new List<GameObject>();
 
         float normalizedRadius = 0.35f;

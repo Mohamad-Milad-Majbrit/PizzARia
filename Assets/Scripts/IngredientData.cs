@@ -8,6 +8,10 @@ public class IngredientData : ScriptableObject
     public float priceMedium;
     public float priceLarge;
     public Sprite icon;
+    public float kcal;
+    public float protein;
+    public float carbohydrates;
+    public float fat;
 
     public GameObject arModelPrefab;
 
@@ -22,4 +26,16 @@ public class IngredientData : ScriptableObject
             default: return priceMedium;
         }
     }
+
+    public NutritionData GetNutrition()
+    {
+        return new NutritionData
+        {
+            kcal = kcal,
+            protein = protein,
+            carbohydrates = carbohydrates,
+            fat = fat
+        };
+    }
+
 }

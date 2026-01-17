@@ -16,4 +16,8 @@ MonoBehaviour:
   priceSmall: 13
   priceMedium: 15
   priceLarge: 17
+  kcal: 11667
+  protein: 500
+  carbohydrates: 1067
+  fat: 578
   arBaseModelPrefab: {fileID: 7987468940686146966, guid: 8527630f36171a84baff39c476495e6b, type: 3}

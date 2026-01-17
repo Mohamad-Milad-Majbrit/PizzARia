@@ -17,4 +17,8 @@ MonoBehaviour:
   priceMedium: 1.6
   priceLarge: 2.2
   icon: {fileID: 21300000, guid: 1529c02c36087e94e9f0318729d0e22e, type: 2}
+  kcal: 38
+  protein: 2
+  carbohydrates: 0.1
+  fat: 3.3
   arModelPrefab: {fileID: 7324196101487075884, guid: f10a42124c256ad4086c5b5a9adf6030, type: 3}
