@@ -5753,7 +5753,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StartScreenManager
   screenManager: {fileID: 964975273}
   startDelay: 0.1
-  photoResourcePath: StartScreen/startphoto
 --- !u!4 &850342246
 Transform:
   m_ObjectHideFlags: 0
@@ -6285,7 +6284,6 @@ MonoBehaviour:
   amountS: 3
   amountM: 4
   amountL: 5
-  showNutritionalValues: 0
   showPrice: 0
 --- !u!4 &964975271
 Transform:
@@ -13451,4 +13449,5 @@ SceneRoots:
   - {fileID: 130998803}
   - {fileID: 964975271}
   - {fileID: 1046339268}
+  - {fileID: 649279838}
   - {fileID: 850342246}

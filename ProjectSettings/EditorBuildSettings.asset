@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/BlankScene/BlankScene.unity
     guid: 4c843b9a30b3ea347b5dc2f274a71782
   - enabled: 0
-    path: Assets/Scenes/MarkerScene.unity
+    path: Assets/Scenes/MarkerScene2.unity
     guid: ceb183ab1f0b1da438080a9df0018fe2
   - enabled: 1
     path: Assets/Scenes/UserTestScene.unity
