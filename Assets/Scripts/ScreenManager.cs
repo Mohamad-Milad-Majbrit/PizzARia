@@ -23,9 +23,17 @@ public class ScreenManager : MonoBehaviour
     private void Start()
     {
         ingredientCanvas.SetActive(false);
+        canvasPizza.SetActive(false);
+        arCanvas.SetActive(false);
+        
+        uiManager.GenerateIngredientList();
+    }
+
+    public void ShowPizzaMenuScreen()
+    {
+        ingredientCanvas.SetActive(false);
         canvasPizza.SetActive(true);
         arCanvas.SetActive(false);
-        uiManager.GenerateIngredientList();
     }
 
     public void ShowARScreen()
