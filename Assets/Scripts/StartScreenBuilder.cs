@@ -171,7 +171,7 @@ public static class StartScreenBuilder
         tagObj.transform.SetParent(titleArea.transform, false);
 
         TextMeshProUGUI tag = tagObj.AddComponent<TextMeshProUGUI>();
-        tag.text = "Create Your Perfect Pizza in AR";
+        tag.text = "Erstellen Sie Ihre perfekte Pizza in AR";
         tag.fontSize = 28;
         tag.alignment = TextAlignmentOptions.Center;
         tag.color = grayText;
@@ -215,7 +215,7 @@ public static class StartScreenBuilder
         rect.sizeDelta = new Vector2(600, 60);
 
         TextMeshProUGUI text = subObj.AddComponent<TextMeshProUGUI>();
-        text.text = "Customize  ·  Preview  ·  Order";
+        text.text = "Anpassen - Vorschau - Bestellen";
         text.fontSize = 26;
         text.alignment = TextAlignmentOptions.Center;
         text.color = grayText;
