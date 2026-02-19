@@ -58,13 +58,14 @@ public class PizzaController : MonoBehaviour
 
         pizzaSize = scale;
 
-        pizza.transform.localScale = Vector3.one * scale;
+        //pizza.transform.localScale = Vector3.one * scale;
 
         int ingredientAmount = OrderManager.Instance.GetFloatIngredientAmount(pizzaRole);
         foreach (var ingredient in OrderManager.Instance.allIngredients)
         {
             if (OrderManager.Instance.IsIgredientSelected(ingredient))
             {
+                StartPop(Vector3.one * scale);
                 SpawnInitialBatch(ingredient, ingredientAmount);
             }
         }
@@ -225,7 +226,13 @@ public class PizzaController : MonoBehaviour
 
     public void SpawnInitialBatch(IngredientData data, int amount)
     {
-        StartCoroutine(SpawnSingleIngredientType(data, amount));
+        StartCoroutine(DelayedInitialSpawn(data, amount));
+    }
+
+    private IEnumerator DelayedInitialSpawn(IngredientData data, int count)
+    {
+        yield return new WaitForSeconds(duration + 0.01f);
+        yield return StartCoroutine(SpawnSingleIngredientType(data, count));
     }
 
     private IEnumerator SpawnSingleIngredientType(IngredientData data, int count)
@@ -247,10 +254,10 @@ public class PizzaController : MonoBehaviour
             float x = r * Mathf.Cos(theta);
             float z = r * Mathf.Sin(theta);
 
-            Vector3 rayStartLocal = new Vector3(x, 0.2f, z);
+            Vector3 rayStartLocal = new Vector3(x, 0.3f, z);
             Vector3 rayStartWorld = pizza.transform.TransformPoint(rayStartLocal);
 
-            if (Physics.Raycast(rayStartWorld, -pizza.transform.up, out RaycastHit hitInfo, 0.5f, layerMask))
+            if (Physics.Raycast(rayStartWorld, -pizza.transform.up, out RaycastHit hitInfo, 0.6f, layerMask))
             {
                 GameObject newIngredient = Instantiate(data.arModelPrefab, hitInfo.point, Quaternion.identity);
 
