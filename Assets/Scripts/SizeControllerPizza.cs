@@ -17,29 +17,32 @@ public class SizeControllerPizza : MonoBehaviour
         toggleL.onValueChanged.AddListener(isOn => OnSizeChanged(2, isOn));
     }
 
-
     public void BindToPizza(PizzaController pizza)
     {
         currentPizza = pizza;
 
-        int sizeIndex = OrderManager.Instance.mainSizeIndex;
-        if (sizeIndex == 0)
-        {
-            toggleS.SetIsOnWithoutNotify(true);
-        }
-        else if (sizeIndex == 1)
-        {
-            toggleM.SetIsOnWithoutNotify(true);
-        }
-        else
-        {
-            toggleL.SetIsOnWithoutNotify(true);
-        }
+        // WICHTIG: Hier keine Toggles setzen! Das GameObject ist zu diesem 
+        // Zeitpunkt oft noch inaktiv, was die ToggleGroup von Unity durcheinanderbringt.
     }
 
     public void Show()
     {
         gameObject.SetActive(true);
+
+        if (currentPizza != null)
+        {
+            suppressCallback = true;
+
+            int sizeIndex = (currentPizza.pizzaRole == PizzaRole.Main)
+                ? OrderManager.Instance.mainSizeIndex
+                : OrderManager.Instance.compareSizeIndex;
+
+            toggleS.isOn = (sizeIndex == 0);
+            toggleM.isOn = (sizeIndex == 1);
+            toggleL.isOn = (sizeIndex == 2);
+
+            suppressCallback = false;
+        }
     }
 
     private void OnSizeChanged(int sizeIndex, bool isOn)

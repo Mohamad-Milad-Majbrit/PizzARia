@@ -142,7 +142,7 @@ public static class StartScreenBuilder
 
         TextMeshProUGUI title = titleObj.AddComponent<TextMeshProUGUI>();
         title.text = "PizzARia";
-        title.fontSize = 88;
+        title.fontSize = 126;
         title.fontStyle = FontStyles.Bold;
         title.alignment = TextAlignmentOptions.Center;
         title.color = darkText;
@@ -162,8 +162,8 @@ public static class StartScreenBuilder
         lineImg.raycastTarget = false;
 
         RectTransform lineRect = line.GetComponent<RectTransform>();
-        lineRect.anchorMin = new Vector2(0.3f, 0.35f);
-        lineRect.anchorMax = new Vector2(0.7f, 0.38f);
+        lineRect.anchorMin = new Vector2(0.2f, 0.35f);
+        lineRect.anchorMax = new Vector2(0.8f, 0.38f);
         lineRect.offsetMin = Vector2.zero;
         lineRect.offsetMax = Vector2.zero;
 
@@ -171,8 +171,8 @@ public static class StartScreenBuilder
         tagObj.transform.SetParent(titleArea.transform, false);
 
         TextMeshProUGUI tag = tagObj.AddComponent<TextMeshProUGUI>();
-        tag.text = "Create Your Perfect Pizza in AR";
-        tag.fontSize = 28;
+        tag.text = "Erstelle deine perfekte Pizza in AR";
+        tag.fontSize = 36;
         tag.alignment = TextAlignmentOptions.Center;
         tag.color = grayText;
         tag.raycastTarget = false;
@@ -190,7 +190,7 @@ public static class StartScreenBuilder
         card.transform.SetParent(parent, false);
 
         RectTransform cardRect = card.AddComponent<RectTransform>();
-        cardRect.sizeDelta = new Vector2(480, 380);
+        cardRect.sizeDelta = new Vector2(580, 580);
 
         Image photoImg = card.AddComponent<Image>();
         photoImg.sprite = sprite;
@@ -215,8 +215,8 @@ public static class StartScreenBuilder
         rect.sizeDelta = new Vector2(600, 60);
 
         TextMeshProUGUI text = subObj.AddComponent<TextMeshProUGUI>();
-        text.text = "Customize  ·  Preview  ·  Order";
-        text.fontSize = 26;
+        text.text = "Anpassen  ·  Vorschau  ·  Bestellen";
+        text.fontSize = 36;
         text.alignment = TextAlignmentOptions.Center;
         text.color = grayText;
         text.characterSpacing = 2;
@@ -229,7 +229,7 @@ public static class StartScreenBuilder
         btnObj.transform.SetParent(parent, false);
 
         RectTransform btnRect = btnObj.AddComponent<RectTransform>();
-        btnRect.sizeDelta = new Vector2(300, 72);
+        btnRect.sizeDelta = new Vector2(480, 100);
 
         Image btnBg = btnObj.AddComponent<Image>();
         btnBg.color = primaryGreen;
@@ -251,7 +251,7 @@ public static class StartScreenBuilder
 
         TextMeshProUGUI btnText = textObj.AddComponent<TextMeshProUGUI>();
         btnText.text = "Start";
-        btnText.fontSize = 32;
+        btnText.fontSize = 42;
         btnText.fontStyle = FontStyles.Bold;
         btnText.alignment = TextAlignmentOptions.Center;
         btnText.color = Color.white;

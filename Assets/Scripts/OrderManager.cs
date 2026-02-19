@@ -17,9 +17,9 @@ public class OrderManager : MonoBehaviour
     public Action OnOrderChanged;
     public event Action<IngredientData, bool> OnIngredientToggled;
 
-    public float sizeS = 0.14f;//0.14f;
+    public float sizeS = 0.14f;
     public float sizeM = 0.17f;
-    public float sizeL = 0.19f; //0.19f;
+    public float sizeL = 0.19f;
 
     
     public int amountS = 3;
@@ -79,7 +79,6 @@ public class OrderManager : MonoBehaviour
         if (pizzaRole == PizzaRole.Main)
             return GetFloatSize();
 
-        // BUGFIX: hier compareSizeIndex verwenden
         if (compareSizeIndex == 0) return sizeS;
         if (compareSizeIndex == 1) return sizeM;
         return sizeL;
